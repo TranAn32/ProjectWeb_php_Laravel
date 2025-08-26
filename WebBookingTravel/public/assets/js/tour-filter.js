@@ -13,7 +13,7 @@
  *   GET /api/tours/pickup-points -> ["Hà Nội", "Đà Nẵng", ...]
  */
 (function() {
-  const API_DESTINATIONS = '/api/v1/tours/destinations';
+  const API_DESTINATIONS = '/api/v1/tours/departure-points';
   const API_PICKUPS = '/api/v1/tours/pickup-points';
   const selDestination = document.getElementById('city'); // original select (destination)
   const selPickup = document.getElementById('activity'); // original select (pickup / departure)

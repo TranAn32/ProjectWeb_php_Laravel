@@ -73,32 +73,38 @@
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-lg-12">
-                <div class="section-title text-black text-center counter-text-wrap mb-70" data-aos="fade-up" data-aos-duration="700">
+                <div class="section-title text-black text-center counter-text-wrap mb-50" data-aos="fade-up" data-aos-duration="450" data-aos-offset="20" data-aos-anchor-placement="top-bottom">
                     <div class="title-inline">
-                        <h2>Khám phá du lịch Việt Nam cùng</h2>
+                        <h2>Khám phá các địa điểm du lịch cùng</h2>
                         <div class="logo"><a href="{{ route('home') }}"><img src="{{ asset('assets/images/logos/logo.png') }}" alt="Logo"></a></div>
                     </div>
                     <p>Hơn <span class="count-text plus" data-speed="3000" data-stop="1200">0</span> trải nghiệm đáng nhớ đang chờ bạn</p>
                 </div>
             </div>
         </div>
-        <div class="row justify-content-center">
-            @for($i=0;$i<4;$i++)
-                <div class="col-xxl-3 col-xl-4 col-md-6">
-                <div class="destination-item" data-aos="fade-up" data-aos-duration="700">
+        <div class="row justify-content-center" data-aos="fade-up" data-aos-duration="500" data-aos-offset="80">
+            @php($images = [1,2,3,4])
+            @forelse(($departurePoints ?? collect())->take(4) as $idx => $dp)
+            <div class="col-xxl-3 col-xl-4 col-md-6 mb-4">
+                <div class="destination-item" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="{{ $idx*80 }}">
                     <div class="image">
-                        <img src="{{ asset('assets/images/destinations/dest'.(($i%4)+1).'.jpg') }}" alt="Điểm đến {{ $i+1 }}" width="600" height="400" loading="lazy" style="width:100%;height:auto;">
+                        <img src="{{ asset('assets/images/destinations/dest'.($images[$idx % 4]).'.jpg') }}" alt="{{ $dp['departurePoint'] }}" width="600" height="400" loading="lazy" style="width:100%;height:auto;">
                     </div>
                     <div class="content">
-                        <h5><a href="#">Điểm đến {{ $i+1 }}</a></h5>
-                        <span>{{ rand(3,9) }} tour</span>
+                        <h5><a href="{{ route('client.tours.index', ['departure' => $dp['departurePoint']]) }}">{{ $dp['departurePoint'] }}</a></h5>
+                        <span>{{ $dp['count'] }} tour</span>
                     </div>
                     <div class="destination-footer">
-                        <a href="#" class="read-more">Xem chi tiết <i class="far fa-arrow-right"></i></a>
+                        <a href="{{ route('client.tours.index', ['departure' => $dp['departurePoint']]) }}" class="read-more">Xem chi tiết <i class="far fa-arrow-right"></i></a>
                     </div>
                 </div>
+            </div>
+            @empty
+            <div class="col-12 text-center">
+                <p class="text-muted mb-0">Chưa có dữ liệu điểm khởi hành.</p>
+            </div>
+            @endforelse
         </div>
-        @endfor
     </div>
     </div>
 </section>

@@ -5,6 +5,11 @@
 
     RewriteEngine On
 
+    # Force /admin to go through Laravel routing even though a physical /public/admin directory exists.
+    # Without this, Apache treats /admin as a real directory and never reaches index.php, so the named route 'admin.entry' 404s.
+    # This rule ONLY matches the exact /admin (no trailing slash, no further path) so assets like /admin/css/... still work.
+    RewriteRule ^admin$ index.php [L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

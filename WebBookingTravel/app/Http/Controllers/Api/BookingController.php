@@ -1,15 +1,18 @@
 <?php
+
 namespace App\Http\Controllers\Api;
+
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Tour;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+
 class BookingController extends Controller
 {
     public function index()
     {
-        return response()->json(Booking::with(['tour','user'])->orderByDesc('bookingID')->paginate(15));
+        return response()->json(Booking::with(['tour', 'user'])->orderByDesc('bookingID')->paginate(15));
     }
     public function store(Request $request)
     {
@@ -26,7 +29,9 @@ class BookingController extends Controller
         $tour = Tour::find($data['tour_id']);
         $numAdults = $data['adults'];
         $numChildren = $data['children'] ?? 0;
-        $total = $tour->price * ($numAdults + ($numChildren * 0.5));
+        $adultPrice = $tour->priceAdult ?? 0;
+        $childPrice = $tour->priceChild ?? ($adultPrice * 0.5); // fallback heuristic
+        $total = ($numAdults * $adultPrice) + ($numChildren * $childPrice);
         $booking = Booking::create([
             'tourID' => $tour->tourID,
             'userID' => $data['user_id'] ?? null,
@@ -37,6 +42,6 @@ class BookingController extends Controller
             'status' => 'pending',
             'specialRequest' => $data['special_request'] ?? null,
         ]);
-        return response()->json($booking->load(['tour','user']), 201);
+        return response()->json($booking->load(['tour', 'user']), 201);
     }
 }

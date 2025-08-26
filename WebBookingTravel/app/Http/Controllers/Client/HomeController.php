@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Services\TourService;
 
 class HomeController extends Controller
 {
+    public function __construct(private TourService $tourService) {}
     public function index()
     {
         $heroImage = asset('assets/images/hero/hero.jpg');
@@ -41,6 +43,8 @@ class HomeController extends Controller
         if (empty($slides)) {
             $slides = [['src' => $heroImage, 'url' => '#', 'title' => 'Hero']];
         }
-        return view('client.home', compact('slides', 'heroImage'));
+        // Lấy top 4 điểm khởi hành (departurePoint) theo số tour
+        $departurePoints = $this->tourService->departurePoints(8)->take(4); // lấy 8 rồi take 4 phòng trường hợp thiếu hình ảnh custom
+        return view('client.home', compact('slides', 'heroImage', 'departurePoints'));
     }
 }

@@ -9,7 +9,9 @@ use App\Http\Controllers\Admin\TourController as AdminTourController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\PromotionController as AdminPromotionController;
+use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Client\AuthController;
+use Illuminate\Support\Facades\Auth;
 
 // Client routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -17,6 +19,7 @@ Route::get('/home', [HomeController::class, 'index']);
 Route::get('/tours', [ClientTourController::class, 'index'])->name('client.tours.index');
 Route::get('/tours/{id}', [ClientTourController::class, 'show'])->name('client.tours.show');
 Route::get('/category/{category}', [ClientTourController::class, 'category'])->name('client.tours.category');
+Route::get('/tours/type/{type}', [ClientTourController::class, 'type'])->whereIn('type', ['domestic', 'international'])->name('client.tours.type');
 Route::get('/booking', [ClientBookingController::class, 'index'])->name('client.booking');
 
 // Auth (client)
@@ -33,13 +36,38 @@ if (app()->environment('local')) {
 
 // Các URL client khác nếu không khai báo sẽ trả 404 mặc định
 
-// Admin routes (dashboard) - áp dụng middleware CheckAdmin
-Route::prefix('admin')->name('admin.')->middleware('check.admin')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/tours', [AdminTourController::class, 'index'])->name('tours.index');
-    Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
-    Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
-    Route::get('/promotions', [AdminPromotionController::class, 'index'])->name('promotions.index');
+// Admin auth + redirect logic
+Route::get('/admin', function () {
+    if (Auth::guard('admin')->check()) {
+        return redirect()->route('admin.dashboard');
+    }
+    return redirect()->route('admin.login');
+})->name('admin.entry');
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    // Guest (chưa đăng nhập admin) - chỉ xét guard admin
+    Route::middleware('guest:admin')->group(function () {
+        Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login');
+        Route::post('/login', [AdminAuthController::class, 'login'])->name('login.post');
+    });
+
+    // Đã đăng nhập guard admin + (tuỳ chọn) role check
+    Route::middleware(['auth:admin', 'check.admin'])->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
+
+        Route::get('/tours', [AdminTourController::class, 'index'])->name('tours.index');
+        Route::get('/tours/create', [AdminTourController::class, 'create'])->name('tours.create');
+        Route::post('/tours', [AdminTourController::class, 'store'])->name('tours.store');
+        Route::get('/tours/{id}/edit', [AdminTourController::class, 'edit'])->name('tours.edit');
+        Route::put('/tours/{id}', [AdminTourController::class, 'update'])->name('tours.update');
+        Route::delete('/tours/{id}', [AdminTourController::class, 'destroy'])->name('tours.destroy');
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
+        Route::get('/promotions', [AdminPromotionController::class, 'index'])->name('promotions.index');
+        Route::view('/media', 'admin.media.index')->name('media.index');
+        Route::view('/reports', 'admin.reports.index')->name('reports.index');
+    });
 });
 
 // Không khai báo fallback để Laravel trả về 404 cho đường dẫn không tồn tại

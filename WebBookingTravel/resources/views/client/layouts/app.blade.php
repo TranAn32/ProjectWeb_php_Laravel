@@ -32,15 +32,24 @@
 							<nav class="main-menu navbar-expand-lg">
 								<div class="navbar-header">
 									<div class="mobile-logo"><a href="{{ route('home') }}"><img src="{{ asset('assets/images/logos/logo.png') }}" alt="Logo"></a></div>
-									
+
 								</div>
 								<div class="navbar-collapse collapse clearfix">
 									<ul class="navigation clearfix">
 										<li class="{{ request()->routeIs('home') ? 'current' : '' }}"><a href="{{ route('home') }}"><i class="fa fa-home" aria-hidden="true"></i> Trang chủ</a></li>
-										<li class="{{ request()->routeIs('home') ? 'current' : '' }}"><a href="{{ route('home') }}"><i class="fa fa-suitcase" aria-hidden="true"></i> Tour du lịch</a></li>
+										<li class="dropdown {{ request()->routeIs('client.tours.*') ? 'current' : '' }}">
+											<a href="{{ route('client.tours.index') }}" data-bs-toggle="dropdown" aria-expanded="false">
+												<i class="fa fa-suitcase" aria-hidden="true"></i> Tour du lịch <span class="caret"></span>
+											</a>
+											<ul class="dropdown-menu" style="min-width:200px;">
+												<li><a class="dropdown-item" href="{{ route('client.tours.index') }}">Tất cả tour</a></li>
+												<li><a class="dropdown-item" href="{{ route('client.tours.type', ['type' => 'domestic']) }}">Tour trong nước</a></li>
+												<li><a class="dropdown-item" href="{{ route('client.tours.type', ['type' => 'international']) }}">Tour nước ngoài</a></li>
+											</ul>
+										</li>
 										<li class="{{ request()->routeIs('client.booking') ? 'current' : '' }}"><a href="{{ route('client.booking') }}"><i class="fa fa-ticket" aria-hidden="true" style="display:inline-block;transform:rotate(-45deg);"></i> Combo khuyến mại</a></li>
 										<li><a href="#about"><i class="fa fa-info-circle" aria-hidden="true"></i> Giới thiệu</a></li>
-										<li><a href="#contact"><i class="fa fa-envelope" aria-hidden="true"></i> Liên hệ</a></li>
+										<!-- <li><a href="#contact"><i class="fa fa-envelope" aria-hidden="true"></i> Liên hệ</a></li> -->
 
 									</ul>
 								</div>

@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tour extends Model
 {
-    // Actual table per provided schema is singular 'Tour'
+    // Thực tế DB đang dùng bảng 'Tour' (singular) -> giữ nguyên để tránh lỗi ngay.
+    // Nếu sau này muốn chuẩn hoá plural: tạo migration rename 'Tour' => 'tours'
+    // rồi đổi lại giá trị này.
     protected $table = 'Tour';
     protected $primaryKey = 'tourID';
     public $timestamps = false;
@@ -24,6 +26,7 @@ class Tour extends Model
         'pickupPoint',
         'departurePoint',
         'destinationPoint',
+        'tourType', // 'domestic' | 'international'
     ];
 
     // Back-compat accessors used by existing blades

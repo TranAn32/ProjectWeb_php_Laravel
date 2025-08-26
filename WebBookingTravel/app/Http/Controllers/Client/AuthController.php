@@ -26,6 +26,33 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required'
         ]);
+
+        // Fetch user early
+        $user = User::where('email', $credentials['email'])->first();
+        if ($user) {
+            $stored = (string) $user->password;
+            $incoming = $credentials['password'];
+            $looksModern = str_starts_with($stored, '$2y$') || str_starts_with($stored, '$2b$') || str_starts_with($stored, '$argon2');
+            if (!$looksModern) {
+                $match = false;
+                if ($incoming === $stored) {
+                    $match = true;
+                } elseif (strlen($stored) === 32 && ctype_xdigit($stored) && md5($incoming) === strtolower($stored)) {
+                    $match = true;
+                } elseif (strlen($stored) === 40 && ctype_xdigit($stored) && sha1($incoming) === strtolower($stored)) {
+                    $match = true;
+                }
+                if ($match) {
+                    $user->password = Hash::make($incoming); // upgrade legacy
+                    $user->save();
+                    Auth::login($user, $request->boolean('remember'));
+                    $request->session()->regenerate();
+                    return redirect()->intended(route('home'))->with('auth_success', 'Đăng nhập thành công');
+                }
+            }
+        }
+
+        // Modern hash attempt (or user not found yet)
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
             return redirect()->intended(route('home'))->with('auth_success', 'Đăng nhập thành công');
@@ -37,15 +64,16 @@ class AuthController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:100',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:User,email',
             'password' => 'required|min:6|confirmed'
         ]);
         $user = User::create([
-            'name' => $data['name'],
+            'userName' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
         Auth::login($user);
+        $request->session()->regenerate();
         return redirect()->route('home')->with('auth_success', 'Tạo tài khoản thành công');
     }
 
