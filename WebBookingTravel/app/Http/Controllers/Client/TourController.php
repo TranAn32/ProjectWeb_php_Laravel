@@ -10,7 +10,7 @@ class TourController extends Controller
 {
     public function index()
     {
-        $query = Tour::with('images', 'category');
+        $query = Tour::with('category');
         $activeDeparture = request('departure');
         if ($activeDeparture) {
             $query->where('departurePoint', $activeDeparture);
@@ -41,21 +41,5 @@ class TourController extends Controller
         ]);
     }
 
-    /**
-     * Filter by type: domestic | international
-     * Heuristic: destinationPoint OR title contains 'Việt Nam'/'Vietnam' -> domestic, else international.
-     */
-    public function type(string $type)
-    {
-        $validatedType = in_array($type, ['domestic', 'international']) ? $type : 'domestic';
-        $tours = Tour::with('images', 'category')
-            ->where('tourType', $validatedType)
-            ->orderByDesc('tourID')
-            ->paginate(12)
-            ->appends(['type' => $validatedType]);
-        return view('client.tours', [
-            'tours' => $tours,
-            'activeType' => $validatedType,
-        ]);
-    }
+    // Action filter by type removed (schema không còn cột tourType)
 }

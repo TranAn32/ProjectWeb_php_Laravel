@@ -19,7 +19,7 @@ class BookingController extends Controller
         $data = $request->all();
         $validator = Validator::make($data, [
             'tour_id' => 'required|integer|exists:Tour,tourID',
-            'user_id' => 'nullable|integer|exists:User,userID',
+            'user_id' => 'nullable|integer|exists:Users,userID',
             'adults' => 'required|integer|min:1',
             'children' => 'nullable|integer|min:0',
         ]);
@@ -39,7 +39,7 @@ class BookingController extends Controller
             'numAdults' => $numAdults,
             'numChildren' => $numChildren,
             'totalPrice' => $total,
-            'status' => 'pending',
+            'status' => 'Pending',
             'specialRequest' => $data['special_request'] ?? null,
         ]);
         return response()->json($booking->load(['tour', 'user']), 201);

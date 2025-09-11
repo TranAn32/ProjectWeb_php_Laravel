@@ -42,7 +42,8 @@ return [
         ],
         'admin' => [
             'driver' => 'session',
-            'provider' => 'admins',
+            // Use the same Users provider; admin access is enforced by role
+            'provider' => 'users',
         ],
     ],
 
@@ -68,10 +69,7 @@ return [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
-        'admins' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Admin::class,
-        ],
+        // Removed separate admins provider; admins are rows in Users with role='admin'
 
         // 'users' => [
         //     'driver' => 'database',

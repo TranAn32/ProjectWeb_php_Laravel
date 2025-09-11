@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Admin;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -25,8 +25,8 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        // Eloquent provider expects 'email' column; adjust if login by username.
-        $admin = Admin::where('email', $data['email'])->first();
+        // Authenticate against Users table; require role=admin
+        $admin = User::where('email', $data['email'])->where('role', 'admin')->first();
         if ($admin) {
             $incoming = $data['password'];
             $stored   = (string) $admin->password;

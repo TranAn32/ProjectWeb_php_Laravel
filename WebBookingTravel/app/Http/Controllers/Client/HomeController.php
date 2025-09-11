@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Services\TourService;
+use App\Models\Category;
+use App\Models\Tour;
 
 class HomeController extends Controller
 {
@@ -43,8 +45,50 @@ class HomeController extends Controller
         if (empty($slides)) {
             $slides = [['src' => $heroImage, 'url' => '#', 'title' => 'Hero']];
         }
-        // Lấy top 4 điểm khởi hành (departurePoint) theo số tour
-        $departurePoints = $this->tourService->departurePoints(8)->take(4); // lấy 8 rồi take 4 phòng trường hợp thiếu hình ảnh custom
-        return view('client.home', compact('slides', 'heroImage', 'departurePoints'));
+        // Lấy danh mục và số lượng tour trong mỗi danh mục
+        $categories = Category::select('categoryID', 'categoryName', 'imageURL')
+            ->whereHas('tours')
+            ->withCount('tours')
+            ->orderBy('categoryName')
+            ->take(8)
+            ->get();
+
+        // Lấy 8 tour để hiển thị ở mục "Điểm đến phổ biến"
+        $popularTours = Tour::select('tourID', 'departurePoint', 'images', 'title')
+            ->orderByDesc('tourID')
+            ->take(8)
+            ->get();
+
+        // Lấy 4 khách sạn từ JSON hotels của các tour (không trùng tên)
+        $featuredHotels = [];
+        $seen = [];
+        $toursWithHotels = Tour::select('tourID', 'departurePoint', 'hotels')
+            ->whereNotNull('hotels')
+            ->orderByDesc('tourID')
+            ->get();
+        foreach ($toursWithHotels as $t) {
+            $hjson = $t->hotels;
+            if (is_string($hjson)) $hjson = json_decode($hjson, true);
+            if (!is_array($hjson)) continue;
+            foreach ($hjson as $h) {
+                $name = trim((string)($h['name'] ?? ($h['title'] ?? '')));
+                if ($name === '') continue;
+                $key = mb_strtolower($name);
+                if (isset($seen[$key])) continue;
+                $rating = (int) round((float)($h['rating'] ?? $h['stars'] ?? $h['rate'] ?? 0));
+                $rating = max(0, min(5, $rating));
+                $image = $h['image'] ?? $h['imageURL'] ?? $h['thumbnail'] ?? null;
+                $featuredHotels[] = [
+                    'name' => $name,
+                    'rating' => $rating,
+                    'departurePoint' => $t->departurePoint,
+                    'image' => $image,
+                ];
+                $seen[$key] = true;
+                if (count($featuredHotels) >= 4) break 2;
+            }
+        }
+
+        return view('client.home', compact('slides', 'heroImage', 'categories', 'popularTours', 'featuredHotels'));
     }
 }

@@ -8,7 +8,6 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\TourController as AdminTourController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
-use App\Http\Controllers\Admin\PromotionController as AdminPromotionController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Client\AuthController;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +18,6 @@ Route::get('/home', [HomeController::class, 'index']);
 Route::get('/tours', [ClientTourController::class, 'index'])->name('client.tours.index');
 Route::get('/tours/{id}', [ClientTourController::class, 'show'])->name('client.tours.show');
 Route::get('/category/{category}', [ClientTourController::class, 'category'])->name('client.tours.category');
-Route::get('/tours/type/{type}', [ClientTourController::class, 'type'])->whereIn('type', ['domestic', 'international'])->name('client.tours.type');
 Route::get('/booking', [ClientBookingController::class, 'index'])->name('client.booking');
 
 // Auth (client)
@@ -64,9 +62,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/tours/{id}', [AdminTourController::class, 'destroy'])->name('tours.destroy');
         Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
         Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
-        Route::get('/promotions', [AdminPromotionController::class, 'index'])->name('promotions.index');
-        Route::view('/media', 'admin.media.index')->name('media.index');
-        Route::view('/reports', 'admin.reports.index')->name('reports.index');
+        // Chỉ giữ các phần phục vụ 4 bảng: Users, Category, Tour, Booking
     });
 });
 

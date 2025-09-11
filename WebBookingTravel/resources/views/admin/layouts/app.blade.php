@@ -21,10 +21,7 @@
                     <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                     <li><a href="{{ route('admin.tours.index') }}">Tours</a></li>
                     <li><a href="{{ route('admin.bookings.index') }}">Bookings</a></li>
-                    <li><a href="{{ route('admin.promotions.index') }}">Promotions</a></li>
                     <li><a href="{{ route('admin.users.index') }}">Users</a></li>
-                    <li><a href="{{ route('admin.reports.index') }}">Reports</a></li>
-                    <li><a href="{{ route('admin.media.index') }}">Media</a></li>
                 </ul>
             </div>
             <div class="top_nav">

@@ -83,29 +83,28 @@
             </div>
         </div>
         <div class="row justify-content-center" data-aos="fade-up" data-aos-duration="500" data-aos-offset="80">
-            @php($images = [1,2,3,4])
-            @forelse(($departurePoints ?? collect())->take(4) as $idx => $dp)
+            @php $images = [1,2,3,4]; @endphp
+            @forelse(($categories ?? collect())->take(8) as $idx => $cat)
             <div class="col-xxl-3 col-xl-4 col-md-6 mb-4">
-                <div class="destination-item" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="{{ $idx*80 }}">
+                <div class="destination-item" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="{{ $idx*60 }}">
                     <div class="image">
-                        <img src="{{ asset('assets/images/destinations/dest'.($images[$idx % 4]).'.jpg') }}" alt="{{ $dp['departurePoint'] }}" width="600" height="400" loading="lazy" style="width:100%;height:auto;">
+                        <img src="{{ $cat->imageURL ?: asset('assets/images/destinations/dest'.($images[$idx % 4]).'.jpg') }}" alt="{{ $cat->categoryName }}" width="600" height="400" loading="lazy" style="width:100%;height:auto;">
                     </div>
                     <div class="content">
-                        <h5><a href="{{ route('client.tours.index', ['departure' => $dp['departurePoint']]) }}">{{ $dp['departurePoint'] }}</a></h5>
-                        <span>{{ $dp['count'] }} tour</span>
+                        <h5><a href="{{ route('client.tours.category', ['category' => $cat->categoryID]) }}">{{ $cat->categoryName }}</a></h5>
+                        <span>{{ $cat->tours_count }} tour</span>
                     </div>
                     <div class="destination-footer">
-                        <a href="{{ route('client.tours.index', ['departure' => $dp['departurePoint']]) }}" class="read-more">Xem chi tiết <i class="far fa-arrow-right"></i></a>
+                        <a href="{{ route('client.tours.category', ['category' => $cat->categoryID]) }}" class="read-more">Xem chi tiết <i class="far fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
             @empty
             <div class="col-12 text-center">
-                <p class="text-muted mb-0">Chưa có dữ liệu điểm khởi hành.</p>
+                <p class="text-muted mb-0">Chưa có dữ liệu danh mục.</p>
             </div>
             @endforelse
         </div>
-    </div>
     </div>
 </section>
 <!-- Destinations Area end -->
@@ -161,19 +160,29 @@
                 </div>
             </div>
             <div class="container">
-                <div class="row justify-content-center g-4">
-                    @for($i=0;$i<6;$i++)
-                        <div class="col-xl-3 col-md-6">
-                        <div class="destination-item style-two" data-aos="fade-up" data-aos-duration="700">
+                <div class="row justify-content-center align-items-stretch g-4">
+                    @php
+                    $list = ($popularTours ?? collect())->take(8);
+                    @endphp
+                    @forelse($list as $idx => $tour)
+                    <div class="col-xl-3 col-md-6 d-flex">
+                        <div class="destination-item style-two h-100 w-100 d-flex flex-column" data-aos="fade-up" data-aos-duration="700" data-aos-delay="{{ $idx*60 }}">
                             <div class="image">
-                                <img src="{{ asset('assets/images/destinations/pop'.(($i%3)+1).'.jpg') }}" alt="Địa danh {{ $i+1 }}" width="600" height="400" loading="lazy" style="width:100%;height:auto;">
+                                <a href="{{ route('client.tours.show', ['id' => $tour->tourID]) }}">
+                                    <img src="{{ $tour->image_path ?: asset('assets/images/destinations/pop'.(($idx%3)+1).'.jpg') }}" alt="{{ $tour->departurePoint }}" width="600" height="400" loading="lazy" style="width:100%;height:auto;">
+                                </a>
                             </div>
                             <div class="content">
-                                <h6><a href="#">Địa danh {{ $i+1 }}</a></h6>
+                                <h6 class="mt-2"><a href="{{ route('client.tours.show', ['id' => $tour->tourID]) }}">{{ $tour->departurePoint }}</a></h6>
                             </div>
                         </div>
+                    </div>
+                    @empty
+                    <div class="col-12 text-center">
+                        <p class="text-muted mb-0">Chưa có tour để hiển thị.</p>
+                    </div>
+                    @endforelse
                 </div>
-                @endfor
             </div>
         </div>
     </div>
@@ -224,33 +233,50 @@
                 </div>
             </div>
         </div>
-        <div class="row justify-content-center">
-            @for($i=0;$i<4;$i++)
-                <div class="col-xxl-6 col-xl-8 col-lg-10">
-                <div class="destination-item style-three" data-aos="fade-up" data-aos-duration="700">
+        <div class="row justify-content-center g-4">
+            @php $hotels = ($featuredHotels ?? []); @endphp
+            @forelse($hotels as $i => $h)
+            <div class="col-xxl-6 col-xl-8 col-lg-10">
+                <div class="destination-item style-three" data-aos="fade-up" data-aos-duration="700" data-aos-delay="{{ $i*80 }}">
                     <div class="image">
-                        <img src="{{ asset('assets/images/hotel/hotel'.(($i%2)+1).'.jpg') }}" alt="Khách sạn {{ $i+1 }}" width="800" height="500" loading="lazy" style="width:100%;height:auto;">
+                        <img src="{{ $h['image'] ?: asset('assets/images/hotels/vinpearl-halong.jpg') }}" width="200" height="360" loading="lazy" style="width:100%;height:130px;object-fit:cover;">
                     </div>
                     <div class="content p-4">
-                        <h5><a href="#">Khách sạn {{ $i+1 }}</a></h5>
-                        <p class="mb-0 small">Mô tả ngắn gọn về khách sạn nổi bật.</p>
+                        <h5 style="color: white;" class="mb-1">{{ $h['name'] }}</h5>
+                        <div class="d-flex align-items-center gap-2 small text-warning" aria-label="Đánh giá {{ $h['rating'] }} trên 5 sao">
+                            @for($s=1;$s<=5;$s++)
+                                @if($s <=($h['rating'] ?? 0))
+                                <i class="fas fa-star"></i>
+                                @else
+                                <i class="far fa-star"></i>
+                                @endif
+                                @endfor
+                                <span class="text-muted ms-2">{{ $h['rating'] }}/5</span>
+                        </div>
+                        <div class="text-muted small mt-1">
+                            <i class="fal fa-map-marker-alt me-1"></i>{{ $h['departurePoint'] ?? 'Địa điểm không xác định' }}
+                        </div>
                     </div>
                 </div>
+            </div>
+            @empty
+            <div class="col-12 text-center">
+                <p class="text-muted mb-0">Chưa có dữ liệu khách sạn.</p>
+            </div>
+            @endforelse
         </div>
-        @endfor
-    </div>
-    <div class="hotel-more-btn text-center mt-40">
-        <a href="#" class="theme-btn style-four">
-            <span data-hover="Xem thêm khách sạn">Xem thêm khách sạn</span>
-            <i class="fal fa-arrow-right"></i>
-        </a>
-    </div>
+        <div class="hotel-more-btn text-center mt-40">
+            <a href="#" class="theme-btn style-four">
+                <span data-hover="Xem thêm khách sạn">Xem thêm khách sạn</span>
+                <i class="fal fa-arrow-right"></i>
+            </a>
+        </div>
     </div>
 </section>
 <!-- Hotel Area end -->
 
 <!-- Testimonials Area (placeholder) -->
-<section class="testimonials-area rel z-1">
+<!-- <section class="testimonials-area rel z-1">
     <div class="container">
         <div class="testimonials-wrap bgc-lighter p-5 rounded">
             <div class="row">
@@ -264,10 +290,10 @@
             </div>
         </div>
     </div>
-</section>
+</section> -->
 
 <!-- CTA Area start -->
-<section class="cta-area pt-100 rel z-1">
+<!-- <section class="cta-area pt-100 rel z-1">
     <div class="container-fluid">
         <div class="row g-3">
             <div class="col-xl-4 col-md-6" data-aos="zoom-in-down" data-aos-duration="700">
@@ -287,7 +313,7 @@
             </div>
         </div>
     </div>
-</section>
+</section> -->
 <!-- CTA Area end -->
 
 <!-- Blog Area start -->

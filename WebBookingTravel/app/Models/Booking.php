@@ -21,8 +21,13 @@ class Booking extends Model
         'specialRequest',
     ];
 
-    public function tour() { return $this->belongsTo(Tour::class, 'tourID', 'tourID'); }
-    public function user() { return $this->belongsTo(User::class, 'userID', 'userID'); }
-    public function checkout() { return $this->hasOne(Checkout::class, 'bookingID', 'bookingID'); }
-    public function invoice() { return $this->hasOne(Invoice::class, 'bookingID', 'bookingID'); }
+    public function tour()
+    {
+        return $this->belongsTo(Tour::class, 'tourID', 'tourID');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'userID', 'userID');
+    }
+    // Pruned relations to non-core tables
 }

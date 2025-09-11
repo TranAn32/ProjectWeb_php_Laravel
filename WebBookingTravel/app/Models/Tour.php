@@ -17,16 +17,13 @@ class Tour extends Model
         'categoryID',
         'title',
         'description',
-        'quantity',
-        'priceAdult',
-        'priceChild',
-        'availability',
-        'startDate',
-        'endDate',
+        'images',      // JSON
+        'prices',      // JSON { adult, child, ... }
+        'itinerary',   // JSON
         'pickupPoint',
         'departurePoint',
-        'destinationPoint',
-        'tourType', // 'domestic' | 'international'
+        'hotels',      // JSON
+        'status',
     ];
 
     // Back-compat accessors used by existing blades
@@ -51,21 +48,44 @@ class Tour extends Model
         return $this->belongsTo(Category::class, 'categoryID', 'categoryID');
     }
 
-    public function images()
-    {
-        return $this->hasMany(Image::class, 'tourID', 'tourID');
-    }
-
+    // Images are stored as JSON now. Return first image url if available.
     public function getImagePathAttribute()
     {
-        // Prefer first image URL if available (for cover display)
-        $first = $this->images()->orderBy('imageID')->first();
-        return $first?->imageURL; // May be an absolute URL per your seed data
+        $val = $this->images;
+        if (is_string($val)) {
+            $decoded = json_decode($val, true);
+        } else {
+            $decoded = $val;
+        }
+        if (is_array($decoded) && !empty($decoded)) {
+            $first = $decoded[0];
+            if (is_array($first)) {
+                return $first['url'] ?? null;
+            }
+            if (is_string($first)) {
+                return $first;
+            }
+        }
+        return null;
     }
 
     // Accessor for compat: $tour->id
     public function getIdAttribute()
     {
         return $this->tourID;
+    }
+
+    // Accessors for derived prices from JSON
+    public function getPriceAdultAttribute()
+    {
+        $prices = $this->prices;
+        if (is_string($prices)) $prices = json_decode($prices, true);
+        return is_array($prices) && isset($prices['adult']) ? (float) $prices['adult'] : null;
+    }
+    public function getPriceChildAttribute()
+    {
+        $prices = $this->prices;
+        if (is_string($prices)) $prices = json_decode($prices, true);
+        return is_array($prices) && isset($prices['child']) ? (float) $prices['child'] : null;
     }
 }

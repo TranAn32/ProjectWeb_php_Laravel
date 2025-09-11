@@ -43,8 +43,8 @@
 											</a>
 											<ul class="dropdown-menu" style="min-width:200px;">
 												<li><a class="dropdown-item" href="{{ route('client.tours.index') }}">Tất cả tour</a></li>
-												<li><a class="dropdown-item" href="{{ route('client.tours.type', ['type' => 'domestic']) }}">Tour trong nước</a></li>
-												<li><a class="dropdown-item" href="{{ route('client.tours.type', ['type' => 'international']) }}">Tour nước ngoài</a></li>
+												<li><a class="dropdown-item" href="{{ route('client.tours.index') }}">Tour trong nước</a></li>
+												<li><a class="dropdown-item" href="{{ route('client.tours.index') }}">Tour nước ngoài</a></li>
 											</ul>
 										</li>
 										<li class="{{ request()->routeIs('client.booking') ? 'current' : '' }}"><a href="{{ route('client.booking') }}"><i class="fa fa-ticket" aria-hidden="true" style="display:inline-block;transform:rotate(-45deg);"></i> Combo khuyến mại</a></li>

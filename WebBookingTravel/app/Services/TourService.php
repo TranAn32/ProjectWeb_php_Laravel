@@ -14,12 +14,13 @@ class TourService
 {
     public function paginateWithRelations(int $perPage = 10): LengthAwarePaginator
     {
-        return Tour::with(['images', 'category'])->orderByDesc('tourID')->paginate($perPage);
+        // Images now in JSON; only eager load category
+        return Tour::with(['category'])->orderByDesc('tourID')->paginate($perPage);
     }
 
     public function findDetailed(int $id): ?Tour
     {
-        return Tour::with(['images', 'category'])->where('tourID', $id)->first();
+        return Tour::with(['category'])->where('tourID', $id)->first();
     }
 
     /**

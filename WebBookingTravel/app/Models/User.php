@@ -17,7 +17,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $table = 'User';
+    protected $table = 'Users';
     protected $primaryKey = 'userID';
     public $timestamps = false;
 
@@ -50,10 +50,13 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-        // 'password' => 'hashed', // optional: your data may be pre-hashed or plain in seed
+            // 'password' => 'hashed', // optional: your data may be pre-hashed or plain in seed
         ];
     }
 
     // Back-compat accessors
-    public function getNameAttribute() { return $this->userName; }
+    public function getNameAttribute()
+    {
+        return $this->userName;
+    }
 }

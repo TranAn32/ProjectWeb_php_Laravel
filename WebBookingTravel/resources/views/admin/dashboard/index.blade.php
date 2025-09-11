@@ -10,7 +10,7 @@
         <div class="panel">Đơn đặt: {{ $stats['bookings'] ?? 0 }}</div>
     </div>
     <div class="col-md-3">
-        <div class="panel">Khuyến mãi: {{ $stats['promotions'] ?? 0 }}</div>
+        {{-- Pruned promotions module --}}
     </div>
     <div class="col-md-3">
         <div class="panel">Người dùng: {{ $stats['users'] ?? 0 }}</div>
