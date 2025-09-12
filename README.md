@@ -4,13 +4,10 @@
 1. [Giới thiệu về dự án](#1-giới-thiệu-về-dự-án)
 2. [Công nghệ sử dụng](#2-công-nghệ-sử-dụng)
 3. [Phương pháp phát triển](#3-phương-pháp-phát-triển)
-4. [Sprint Review](#4-sprint-review)
-5. [Chức năng hệ thống](#5-chức-năng-hệ-thống)
-6. [Product Backlog](#6-product-backlog)
-7. [Sprint Backlog](#7-sprint-backlog)
-8. [Thiết kế hệ thống](#8-thiết-kế-hệ-thống)
-9. [Hướng dẫn cài đặt & chạy](#9-hướng-dẫn-cài-đặt--chạy)
-10. [Demo & Kết quả](#10-demo--kết-quả)
+4. [Chức năng hệ thống](#4-chức-năng-hệ-thống)
+5. [Product Backlog](#5-product-backlog)
+6. [Thiết kế hệ thống](#6-thiết-kế-hệ-thống)
+7. [Hướng dẫn cài đặt & chạy](#7-hướng-dẫn-cài-đặt--chạy)
 
 
 ## 1. Giới thiệu về dự án
@@ -29,13 +26,7 @@ WebBookingTravel là hệ thống quản lý & đặt tour du lịch (frontend +
 - Mô hình **Agile/Scrum**, chia thành 9 Sprint.
 - Mỗi Sprint gồm: Lập kế hoạch, thực hiện, review và retrospective.
 
-
-## 4. Sprint Review
-- [Sprint Meeting 1](./Sprint-Meeting-1:-19‐08‐2025)
-- [Sprint Meeting 2](./Sprint-Meeting-2:-27‐08‐2025)
-- [Sprint Meeting 3](./Sprint-Meeting-3:-09‐09‐2025)
-
-## 5. Chức năng hệ thống
+## 4. Chức năng hệ thống
 - **Client**:
   - Xem danh sách tour, chi tiết tour
   - Lọc tour theo loại, danh mục, điểm khởi hành
@@ -45,20 +36,14 @@ WebBookingTravel là hệ thống quản lý & đặt tour du lịch (frontend +
   - Hệ thống Media, Reports (placeholder)
   - Bảo mật bằng middleware, guard riêng
 
-
-## 6. Product Backlog
+## 5. Product Backlog
 - Quản lý Tour (CRUD, lọc, phân trang)
 - Quản lý User & Booking
 - Đăng ký/Đăng nhập (User & Admin)
 - UI/UX tối ưu
 
 
-
-## 7. Sprint Backlog
-
-
-
-## 8. Thiết kế hệ thống
+## 6. Thiết kế hệ thống
 - **Kiến trúc tổng quan**: MVC + Service
 - **Database schema**: MySQL (Tours, Categories, Users, Bookings, Promotions, Media, Reports)
 - **Flow**:
@@ -66,7 +51,7 @@ WebBookingTravel là hệ thống quản lý & đặt tour du lịch (frontend +
   - Admin → Admin Panel → CRUD/Reports
 
 
-## 9. Hướng dẫn cài đặt & chạy
+## 7. Hướng dẫn cài đặt & chạy
 1. Clone / copy mã nguồn về máy
 2. Tạo file `.env` từ `.env.example` và chỉnh DB_*
 3. Cài đặt phụ thuộc: `composer install`
@@ -78,8 +63,5 @@ WebBookingTravel là hệ thống quản lý & đặt tour du lịch (frontend +
 9. Truy cập:
    - Client: `http://127.0.0.1:8000/`
    - Admin: `http://127.0.0.1:8000/admin`
-
-
-## 10. Demo & Kết quả
 
 
