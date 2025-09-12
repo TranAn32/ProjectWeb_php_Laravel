@@ -69,7 +69,7 @@
 <!-- Hero Area End -->
 
 <!-- Destinations Area start -->
-<section class="destinations-area bgc-lighter pt-50 pb-70 rel z-1">
+<section class="destinations-area bgc-lighter pt-50 pb-40 rel z-1">
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-lg-12">
@@ -86,16 +86,16 @@
             @php $images = [1,2,3,4]; @endphp
             @forelse(($categories ?? collect())->take(8) as $idx => $cat)
             <div class="col-xxl-3 col-xl-4 col-md-6 mb-4">
-                <div class="destination-item" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="{{ $idx*60 }}">
+                <div class="destination-item style-four" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="{{ $idx*60 }}">
                     <div class="image">
-                        <img src="{{ $cat->imageURL ?: asset('assets/images/destinations/dest'.($images[$idx % 4]).'.jpg') }}" alt="{{ $cat->categoryName }}" width="600" height="400" loading="lazy" style="width:100%;height:auto;">
+                        <img src="{{ $cat->imageURL ?: asset('assets/images/destinations/dest'.($images[$idx % 4]).'.jpg') }}" alt="{{ $cat->categoryName }}" width="600" height="400" loading="lazy" style="width:100%;height:280px;">
                     </div>
                     <div class="content">
                         <h5><a href="{{ route('client.tours.category', ['category' => $cat->categoryID]) }}">{{ $cat->categoryName }}</a></h5>
                         <span>{{ $cat->tours_count }} tour</span>
                     </div>
                     <div class="destination-footer">
-                        <a href="{{ route('client.tours.category', ['category' => $cat->categoryID]) }}" class="read-more">Xem chi tiết <i class="far fa-arrow-right"></i></a>
+                        <a href="{{ route('client.tours.category', ['category' => $cat->categoryID]) }}" class="theme-btn ">Xem chi tiết <i class="far fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -109,48 +109,12 @@
 </section>
 <!-- Destinations Area end -->
 
-<!-- About Us Area start -->
-<section class="about-us-area py-100 rpb-90 rel z-1">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-xl-5 col-lg-6">
-                <div class="about-us-content rmb-55" data-aos="fade-left" data-aos-duration="700">
-                    <div class="section-title mb-25">
-                        <h2>Về chúng tôi</h2>
-                    </div>
-                    <p>Chúng tôi luôn nỗ lực vượt mong đợi để biến giấc mơ du lịch của bạn thành hiện thực, kết hợp giữa điểm đến nổi tiếng và những viên ngọc ẩn mình.</p>
-                    <div class="divider counter-text-wrap mt-45 mb-55"><span>Chúng tôi có <span><span class="count-text plus" data-speed="3000" data-stop="5">0</span> năm</span> kinh nghiệm</span></div>
-                    <div class="row g-3">
-                        <div class="col-6">
-                            <div class="p-3 bg-light rounded small">Dịch vụ tận tâm</div>
-                        </div>
-                        <div class="col-6">
-                            <div class="p-3 bg-light rounded small">Hỗ trợ 24/7</div>
-                        </div>
-                        <div class="col-6">
-                            <div class="p-3 bg-light rounded small">Tour đa dạng</div>
-                        </div>
-                        <div class="col-6">
-                            <div class="p-3 bg-light rounded small">Giá minh bạch</div>
-                        </div>
-                    </div>
-                    <a href="#about" class="theme-btn mt-10 style-two"><span data-hover="Tìm hiểu thêm">Tìm hiểu thêm</span><i class="fal fa-arrow-right"></i></a>
-                </div>
-            </div>
-            <div class="col-xl-7 col-lg-6" data-aos="fade-right" data-aos-duration="700">
-                <div class="about-us-image">
-                    <img src="{{ asset('assets/images/about/about.png') }}" alt="About">
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- About Us Area end -->
+
 
 <!-- Popular Destinations Area (placeholder) -->
 <section class="popular-destinations-area rel z-1">
     <div class="container-fluid">
-        <div class="popular-destinations-wrap br-20 bgc-lighter pt-100 pb-70">
+        <div class="popular-destinations-wrap br-20 bgc-lighter pt-50 pb-70">
             <div class="row justify-content-center">
                 <div class="col-lg-12">
                     <div class="section-title text-center counter-text-wrap mb-70" data-aos="fade-up" data-aos-duration="700">
@@ -189,6 +153,95 @@
     </div>
 </section>
 
+<!-- Hotel Area start -->
+<section class="hotel-area bgc-lighter p-80 rel z-1">
+    <div class="container-fluid bgc-lighter">
+        <div class="row justify-content-center ">
+            <div class="col-lg-12">
+                <div class="section-title text-black text-center counter-text-wrap mb-70" data-aos="fade-up" data-aos-duration="700">
+                    <h2>Khám phá khách sạn hàng đầu</h2>
+                    <p>Hơn <span class="count-text plus" data-speed="3000" data-stop="34500">0</span> trải nghiệm tuyệt vời chờ bạn</p>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center g-4">
+            @php $hotels = ($featuredHotels ?? []); @endphp
+            @forelse($hotels as $i => $h)
+            <div class="col-xxl-6 col-xl-8 col-lg-10">
+                <div class="destination-item style-four" data-aos="fade-up" data-aos-duration="700" data-aos-delay="{{ $i*80 }}">
+                    <div class="image">
+                        <img src="{{ $h['image'] ?: asset('assets/images/hotels/vinpearl-halong.jpg') }}" width="200" height="360" loading="lazy" style="width:100%;height:230px;object-fit:cover;">
+                    </div>
+                    <div class="content p-4">
+                        <h5 style="color: black;" class="mb-1">{{ $h['name'] }}</h5>
+                        <div class="d-flex align-items-center gap-2 small text-warning" aria-label="Đánh giá {{ $h['rating'] }} trên 5 sao">
+                            @for($s=1;$s<=5;$s++)
+                                @if($s <=($h['rating'] ?? 0))
+                                <i class="fas fa-star"></i>
+                                @else
+                                <i class="far fa-star"></i>
+                                @endif
+                                @endfor
+                                <span class="text-muted ms-2">{{ $h['rating'] }}/5</span>
+                        </div>
+                        <div class="text-muted small mt-1">
+                            <i class="fal fa-map-marker-alt me-1"></i>{{ $h['departurePoint'] ?? 'Địa điểm không xác định' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @empty
+            <div class="col-12 text-center">
+                <p class="text-muted mb-0">Chưa có dữ liệu khách sạn.</p>
+            </div>
+            @endforelse
+        </div>
+        <div  class="hotel-more-btn text-center mt-40">
+            <a style="background-color: #63AB45;" href="#" class="theme-btn style-four">
+                <span  data-hover="Xem thêm khách sạn">Xem thêm khách sạn</span>
+                <i class="fal fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+<!-- Hotel Area end -->
+<!-- About Us Area start -->
+<section class="about-us-area py-50 rpb-90 rel z-1">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-xl-5 col-lg-6">
+                <div class="about-us-content rmb-55" data-aos="fade-left" data-aos-duration="700">
+                    <div class="section-title mb-25">
+                        <h2>Về chúng tôi</h2>
+                    </div>
+                    <p>Chúng tôi luôn nỗ lực vượt mong đợi để biến giấc mơ du lịch của bạn thành hiện thực, kết hợp giữa điểm đến nổi tiếng và những viên ngọc ẩn mình.</p>
+                    <div class="divider counter-text-wrap mt-45 mb-55"><span>Chúng tôi có <span><span class="count-text plus" data-speed="3000" data-stop="5">0</span> năm</span> kinh nghiệm</span></div>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded small">Dịch vụ tận tâm</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded small">Hỗ trợ 24/7</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded small">Tour đa dạng</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded small">Giá minh bạch</div>
+                        </div>
+                    </div>
+                    <a href="#about" class="theme-btn mt-10 style-two"><span data-hover="Tìm hiểu thêm">Tìm hiểu thêm</span><i class="fal fa-arrow-right"></i></a>
+                </div>
+            </div>
+            <div class="col-xl-7 col-lg-6" data-aos="fade-right" data-aos-duration="700">
+                <div class="about-us-image">
+                    <img src="{{ asset('assets/images/about/about.png') }}" alt="About">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- About Us Area end -->
 <!-- Features Area start -->
 <section class="features-area pt-100 pb-45 rel z-1">
     <div class="container">
@@ -222,58 +275,7 @@
 </section>
 <!-- Features Area end -->
 
-<!-- Hotel Area start -->
-<section class="hotel-area bgc-black py-100 rel z-1">
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-lg-12">
-                <div class="section-title text-white text-center counter-text-wrap mb-70" data-aos="fade-up" data-aos-duration="700">
-                    <h2>Khám phá khách sạn hàng đầu</h2>
-                    <p>Hơn <span class="count-text plus" data-speed="3000" data-stop="34500">0</span> trải nghiệm tuyệt vời chờ bạn</p>
-                </div>
-            </div>
-        </div>
-        <div class="row justify-content-center g-4">
-            @php $hotels = ($featuredHotels ?? []); @endphp
-            @forelse($hotels as $i => $h)
-            <div class="col-xxl-6 col-xl-8 col-lg-10">
-                <div class="destination-item style-three" data-aos="fade-up" data-aos-duration="700" data-aos-delay="{{ $i*80 }}">
-                    <div class="image">
-                        <img src="{{ $h['image'] ?: asset('assets/images/hotels/vinpearl-halong.jpg') }}" width="200" height="360" loading="lazy" style="width:100%;height:130px;object-fit:cover;">
-                    </div>
-                    <div class="content p-4">
-                        <h5 style="color: white;" class="mb-1">{{ $h['name'] }}</h5>
-                        <div class="d-flex align-items-center gap-2 small text-warning" aria-label="Đánh giá {{ $h['rating'] }} trên 5 sao">
-                            @for($s=1;$s<=5;$s++)
-                                @if($s <=($h['rating'] ?? 0))
-                                <i class="fas fa-star"></i>
-                                @else
-                                <i class="far fa-star"></i>
-                                @endif
-                                @endfor
-                                <span class="text-muted ms-2">{{ $h['rating'] }}/5</span>
-                        </div>
-                        <div class="text-muted small mt-1">
-                            <i class="fal fa-map-marker-alt me-1"></i>{{ $h['departurePoint'] ?? 'Địa điểm không xác định' }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @empty
-            <div class="col-12 text-center">
-                <p class="text-muted mb-0">Chưa có dữ liệu khách sạn.</p>
-            </div>
-            @endforelse
-        </div>
-        <div class="hotel-more-btn text-center mt-40">
-            <a href="#" class="theme-btn style-four">
-                <span data-hover="Xem thêm khách sạn">Xem thêm khách sạn</span>
-                <i class="fal fa-arrow-right"></i>
-            </a>
-        </div>
-    </div>
-</section>
-<!-- Hotel Area end -->
+
 
 <!-- Testimonials Area (placeholder) -->
 <!-- <section class="testimonials-area rel z-1">
