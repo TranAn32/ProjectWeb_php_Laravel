@@ -70,10 +70,37 @@
 							</a>
 							<!-- menu sidbar -->
 							<div class="account-icon ms-2">
+								@php($webUser = Auth::guard('web')->user())
+								@if(!$webUser)
 								@php($loginUrl = Route::has('login') ? route('login') : '#')
 								<a href="{{ $loginUrl }}" class="d-inline-flex align-items-center justify-content-center" aria-label="Tài khoản" style="width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.45);color:#c5c3c3;text-decoration:none;">
 									<i class="far fa-user" style="color: #fff; font-size:18px;"></i>
 								</a>
+								@else
+								<div class="dropdown">
+									<a href="#" class="d-inline-flex align-items-center justify-content-center" id="accountMenu" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Tài khoản" style="width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.72);color:#fff;text-decoration:none;">
+										<i class="far fa-user-circle" style="font-size:20px;"></i>
+									</a>
+									<div class="dropdown-menu dropdown-menu-end p-3 shadow" aria-labelledby="accountMenu" style="min-width:260px;z-index:1080;">
+										<div class="d-flex align-items-center mb-2">
+											<div class="d-inline-flex align-items-center justify-content-center rounded-circle" style="width:40px;height:40px;background:#63AB45;color:#fff;font-weight:700;">
+												{{ strtoupper(mb_substr($webUser->userName ?? ($webUser->name ?? 'U'),0,1)) }}
+											</div>
+											<div class="ms-2">
+												<div class="fw-semibold">{{ $webUser->userName ?? ($webUser->name ?? 'Người dùng') }}</div>
+												<div class="text-muted small">{{ $webUser->email }}</div>
+											</div>
+										</div>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="{{ route('client.booking') }}"><i class="far fa-ticket-alt me-2"></i>Đặt chỗ của tôi</a>
+										<div class="dropdown-divider"></div>
+										<form method="POST" action="{{ route('logout') }}">
+											@csrf
+											<button type="submit" class="dropdown-item text-danger"><i class="far fa-sign-out-alt me-2"></i>Đăng xuất</button>
+										</form>
+									</div>
+								</div>
+								@endif
 							</div>
 						</div>
 
@@ -221,7 +248,8 @@
 	</div>
 
 	<script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
-	<script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
+	<!-- Dùng Bootstrap Bundle để có Popper cho dropdown -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 	<script src="{{ asset('assets/js/appear.min.js') }}"></script>
 	<script src="{{ asset('assets/js/slick.min.js') }}"></script>
 	<script src="{{ asset('assets/js/jquery.magnific-popup.min.js') }}"></script>

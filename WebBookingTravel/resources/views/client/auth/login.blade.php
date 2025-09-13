@@ -44,6 +44,7 @@
             font-weight: 700;
             background: linear-gradient(90deg, #63AB45, #ff6b3d 60%, #ff6b6b);
             -webkit-background-clip: text;
+            background-clip: text;
             color: transparent;
         }
 
@@ -354,8 +355,8 @@
                 <form method="POST" action="{{ route('login.post') }}" novalidate>
                     @csrf
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required autofocus>
+                        <label for="login" class="form-label">Email hoặc tên đăng nhập</label>
+                        <input type="text" class="form-control @error('login') is-invalid @enderror" id="login" name="login" value="{{ old('login') }}" required autofocus placeholder="nhập email hoặc userName">
                     </div>
                     <div class="mb-2">
                         <label for="password" class="form-label">Mật khẩu</label>

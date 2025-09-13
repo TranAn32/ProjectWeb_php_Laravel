@@ -270,7 +270,7 @@
             <div class="brand-inline mb-4" data-aos="fade-right" data-aos-duration="800">
                 <a href="{{ route('home') }}" class="d-inline-flex align-items-center text-decoration-none">
                     <img src="{{ asset('assets/images/logos/logo.png') }}" alt="TripGo">
-                    
+
                 </a>
             </div>
             <div class="register-panel" data-aos="zoom-in" data-aos-duration="800">
@@ -284,12 +284,29 @@
                 <form method="POST" action="{{ route('register.post') }}" novalidate>
                     @csrf
                     <div class="mb-3">
-                        <label for="name" class="form-label">Họ tên</label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" required autofocus>
+                        <label for="userName" class="form-label">Tên đăng nhập</label>
+                        <input type="text" class="form-control @error('userName') is-invalid @enderror" id="userName" name="userName" value="{{ old('userName') }}" required autofocus>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phoneNumber" class="form-label">Số điện thoại</label>
+                        <input type="text" class="form-control @error('phoneNumber') is-invalid @enderror" id="phoneNumber" name="phoneNumber" value="{{ old('phoneNumber') }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Địa chỉ</label>
+                        <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" value="{{ old('address') }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="gender" class="form-label">Giới tính</label>
+                        <select id="gender" name="gender" class="form-control @error('gender') is-invalid @enderror">
+                            <option value="">-- Chọn --</option>
+                            <option value="Male" {{ old('gender')==='Male' ? 'selected' : '' }}>Nam</option>
+                            <option value="Female" {{ old('gender')==='Female' ? 'selected' : '' }}>Nữ</option>
+                            <option value="Other" {{ old('gender')==='Other' ? 'selected' : '' }}>Khác</option>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Mật khẩu</label>

@@ -18,14 +18,16 @@ Route::get('/home', [HomeController::class, 'index']);
 Route::get('/tours', [ClientTourController::class, 'index'])->name('client.tours.index');
 Route::get('/tours/{id}', [ClientTourController::class, 'show'])->name('client.tours.show');
 Route::get('/category/{category}', [ClientTourController::class, 'category'])->name('client.tours.category');
-Route::get('/booking', [ClientBookingController::class, 'index'])->name('client.booking');
+Route::get('/booking', [ClientBookingController::class, 'index'])->middleware(['auth:web', 'check.user'])->name('client.booking');
 
 // Auth (client)
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register.post');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware('guest:web')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+});
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:web')->name('logout');
 
 // (Tùy chọn) Healthcheck chỉ trong local (giữ lại nếu cần monitor)
 if (app()->environment('local')) {
@@ -49,8 +51,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/login', [AdminAuthController::class, 'login'])->name('login.post');
     });
 
-    // Đã đăng nhập guard admin + (tuỳ chọn) role check
-    Route::middleware(['auth:admin', 'check.admin'])->group(function () {
+    // Khu vực admin - dùng middleware check.admin để đảm bảo redirect đúng trang admin.login
+    Route::middleware(['check.admin'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -22,64 +22,63 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
+        $data = $request->validate([
+            'login' => 'required|string',
+            'password' => 'required|string',
+            'remember' => 'nullable|boolean',
         ]);
 
-        // Fetch user early
-        $user = User::where('email', $credentials['email'])->first();
-        if ($user) {
-            $stored = (string) $user->password;
-            $incoming = $credentials['password'];
-            $looksModern = str_starts_with($stored, '$2y$') || str_starts_with($stored, '$2b$') || str_starts_with($stored, '$argon2');
-            if (!$looksModern) {
-                $match = false;
-                if ($incoming === $stored) {
-                    $match = true;
-                } elseif (strlen($stored) === 32 && ctype_xdigit($stored) && md5($incoming) === strtolower($stored)) {
-                    $match = true;
-                } elseif (strlen($stored) === 40 && ctype_xdigit($stored) && sha1($incoming) === strtolower($stored)) {
-                    $match = true;
-                }
-                if ($match) {
-                    $user->password = Hash::make($incoming); // upgrade legacy
-                    $user->save();
-                    Auth::login($user, $request->boolean('remember'));
-                    $request->session()->regenerate();
-                    return redirect()->intended(route('home'))->with('auth_success', 'Đăng nhập thành công');
-                }
+        $field = filter_var($data['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'userName';
+
+        $user = User::query()->where($field, $data['login'])->first();
+
+        // Kiểm tra trạng thái Active nếu có cột status
+        if ($user && Schema::hasColumn('Users', 'status')) {
+            $status = (string)($user->status ?? '');
+            if (strcasecmp($status, 'Active') !== 0) {
+                return back()->withErrors(['login' => 'Tài khoản chưa được kích hoạt'])->onlyInput('login');
             }
         }
 
-        // Modern hash attempt (or user not found yet)
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        if ($user && (string)$user->password === (string)$data['password']) {
+            Auth::guard('web')->login($user, $request->boolean('remember'));
             $request->session()->regenerate();
             return redirect()->intended(route('home'))->with('auth_success', 'Đăng nhập thành công');
         }
-        return back()->withErrors(['email' => 'Email hoặc mật khẩu không đúng'])->onlyInput('email');
+
+        return back()->withErrors(['login' => 'Thông tin đăng nhập không đúng'])->onlyInput('login');
     }
 
     public function register(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required|string|max:100',
-            'email' => 'required|email|unique:User,email',
-            'password' => 'required|min:6|confirmed'
+            'userName' => 'required|string|min:3|max:50|unique:Users,userName',
+            'email' => 'required|email|max:100|unique:Users,email',
+            'password' => 'required|string|min:6|confirmed',
+            'phoneNumber' => 'nullable|string|max:30',
+            'address' => 'nullable|string|max:255',
+            'gender' => 'nullable|in:Male,Female,Other',
         ]);
+
         $user = User::create([
-            'userName' => $data['name'],
+            'userName' => $data['userName'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'password' => $data['password'],
+            'phoneNumber' => $data['phoneNumber'] ?? null,
+            'address' => $data['address'] ?? null,
+            'gender' => $data['gender'] ?? null,
+            'role' => 'customer',
+            'status' => 'Active',
         ]);
-        Auth::login($user);
+
+        Auth::guard('web')->login($user);
         $request->session()->regenerate();
-        return redirect()->route('home')->with('auth_success', 'Tạo tài khoản thành công');
+        return redirect()->intended(route('home'))->with('auth_success', 'Tạo tài khoản thành công');
     }
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('home');
