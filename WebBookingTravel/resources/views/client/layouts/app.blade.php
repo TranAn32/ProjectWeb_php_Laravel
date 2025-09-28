@@ -79,7 +79,9 @@
 								@else
 								<div class="dropdown">
 									<a href="#" class="d-inline-flex align-items-center justify-content-center" id="accountMenu" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Tài khoản" style="width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.72);color:#fff;text-decoration:none;">
-										<i class="far fa-user-circle" style="font-size:20px;"></i>
+										<div class="d-inline-flex align-items-center justify-content-center rounded-circle" style="width:40px;height:40px;background:#63AB45;color:#fff;font-weight:700;">
+												{{ strtoupper(mb_substr($webUser->userName ?? ($webUser->name ?? 'U'),0,1)) }}
+											</div>
 									</a>
 									<div class="dropdown-menu dropdown-menu-end p-3 shadow" aria-labelledby="accountMenu" style="min-width:260px;z-index:1080;">
 										<div class="d-flex align-items-center mb-2">

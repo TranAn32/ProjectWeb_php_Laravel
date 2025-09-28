@@ -14,10 +14,12 @@ class Booking extends Model
         'tourID',
         'userID',
         'bookingDate',
+        'departureDate',
         'numAdults',
         'numChildren',
         'totalPrice',
         'status',
+        'paymentStatus',
         'specialRequest',
     ];
 

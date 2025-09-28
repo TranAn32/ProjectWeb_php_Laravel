@@ -23,8 +23,17 @@ class CategoryController extends Controller
     // Lưu category mới
     public function store(Request $request)
     {
-        $request->validate(['name' => 'required']);
-        Category::create($request->all());
+        $data = $request->validate([
+            'name' => 'required|string|max:100',
+            'description' => 'nullable|string|max:255',
+        ]);
+
+        $payload = [
+            'categoryName' => $data['name'],
+            'description' => $data['description'] ?? null,
+        ];
+
+        Category::create($payload);
         return redirect()->route('categories.index')->with('success', 'Category đã được thêm');
     }
 
@@ -37,8 +46,17 @@ class CategoryController extends Controller
     // Cập nhật category
     public function update(Request $request, Category $category)
     {
-        $request->validate(['name' => 'required']);
-        $category->update($request->all());
+        $data = $request->validate([
+            'name' => 'required|string|max:100',
+            'description' => 'nullable|string|max:255',
+        ]);
+
+        $payload = [
+            'categoryName' => $data['name'],
+            'description' => $data['description'] ?? null,
+        ];
+
+        $category->update($payload);
         return redirect()->route('categories.index')->with('success', 'Category đã được cập nhật');
     }
 

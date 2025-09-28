@@ -18,7 +18,8 @@ Route::get('/home', [HomeController::class, 'index']);
 Route::get('/tours', [ClientTourController::class, 'index'])->name('client.tours.index');
 Route::get('/tours/{id}', [ClientTourController::class, 'show'])->name('client.tours.show');
 Route::get('/category/{category}', [ClientTourController::class, 'category'])->name('client.tours.category');
-Route::get('/booking', [ClientBookingController::class, 'index'])->middleware(['auth:web', 'check.user'])->name('client.booking');
+Route::get('/booking', [ClientBookingController::class, 'index'])->middleware(['auth:web'])->name('client.booking');
+Route::post('/booking', [ClientBookingController::class, 'store'])->middleware(['auth:web'])->name('client.booking.store');
 
 // Auth (client)
 Route::middleware('guest:web')->group(function () {

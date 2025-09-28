@@ -8254,3 +8254,27 @@ blockquote {
   .footer-bottom-nav li {
     margin: 0 13px 5px; }
 
+
+/* ====== Custom: Tours Listing & Cards ====== */
+.tour-card{border:1px solid #e9ecef;border-radius:14px;overflow:hidden;transition:transform .2s ease, box-shadow .2s ease;background:#fff}
+.tour-card:hover{transform:translateY(-2px);box-shadow:0 12px 30px -12px rgba(0,0,0,.2)}
+.tour-thumb{position:relative;width:100%;padding-top:66.66%;background:#f6f7fb;overflow:hidden}
+.tour-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+.tour-card:hover .tour-thumb img{transform:scale(1.04)}
+.tour-thumb:after{content:"";position:absolute;inset:auto 0 0 0;height:38%;background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.22), rgba(0,0,0,.35))}
+.tour-accent{position:absolute;inset:0;background:radial-gradient(60% 40% at 80% 0%, color-mix(in oklab, var(--primary-color) 25%, transparent), transparent 60%), radial-gradient(40% 30% at 0% 0%, color-mix(in oklab, var(--secondary-color) 18%, transparent), transparent 60%);pointer-events:none}
+.tour-badges{position:absolute;left:10px;right:10px;top:10px;display:flex;gap:6px;flex-wrap:wrap;z-index:2}
+.badge-soft{background:rgba(255,255,255,.95);color:#111;border:1px solid #e7e7ef;border-radius:999px;font-size:12px;padding:4px 8px}
+.badge-type{background:color-mix(in oklab, var(--secondary-color) 14%, #fff);color:#7a3a05;border:1px solid color-mix(in oklab, var(--secondary-color) 30%, #fff)}
+.tour-body{padding:12px 14px 8px}
+.tour-title{font-weight:700;margin:0 0 6px;font-size:1.04rem;line-height:1.25}
+.tour-desc{color:#4b5563;font-size:.92rem;margin:0 0 8px}
+.tour-meta{display:flex;gap:10px;flex-wrap:wrap;color:#374151;font-size:.9rem;margin-bottom:8px}
+.tour-price{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:baseline}
+.price-main{display:flex;align-items:baseline;gap:6px}
+.price-main .amount{font-weight:800;font-size:1.08rem;color:var(--primary-color)}
+.price-main .unit{color:#6b7280;font-size:.85rem}
+.price-chip{background:color-mix(in oklab, var(--secondary-color) 14%, #fff);color:#7a3a05;border:1px solid color-mix(in oklab, var(--secondary-color) 30%, #fff);border-radius:10px;padding:4px 8px;font-weight:600;font-size:.9rem}
+.price-sub{color:#6b7280;font-size:.85rem}
+.tour-actions{display:flex;justify-content:space-between;align-items:center;padding:10px 14px 14px}
+
