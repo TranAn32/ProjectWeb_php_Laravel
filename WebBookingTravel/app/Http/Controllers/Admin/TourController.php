@@ -22,6 +22,7 @@ class TourController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $data = $this->validatedData($request);
         $tour = Tour::create($data);
         return redirect()->route('admin.tours.edit', $tour->tourID)->with('success', 'Đã tạo tour');

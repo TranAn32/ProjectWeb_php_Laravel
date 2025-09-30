@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tour extends Model
 {
-    protected $table = 'Tour';
+    protected $table = 'tours';
     protected $primaryKey = 'tourID';
     public $timestamps = false;
 
