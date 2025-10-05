@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Services\AdminValidationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -24,14 +24,18 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        // Authenticate against Users table; require role=admin
-        $admin = User::where('email', $data['email'])->where('role', 'admin')->first();
-        if ($admin && (string)$admin->password === (string)$data['password']) {
-            Auth::guard('admin')->login($admin, $request->boolean('remember'));
-            $request->session()->regenerate();
-            return redirect()->intended(route('admin.dashboard'));
+        // Sử dụng service chung để validate credentials
+        $result = AdminValidationService::validateAdminCredentials($data['email'], $data['password']);
+
+        if (!$result['valid']) {
+            return back()->withErrors(['email' => $result['message']])->onlyInput('email');
         }
-        return back()->withErrors(['email' => 'Sai thông tin đăng nhập'])->onlyInput('email');
+
+        // Tất cả điều kiện OK - cho phép login
+        Auth::guard('admin')->login($result['user'], $request->boolean('remember'));
+        $request->session()->regenerate();
+
+        return redirect()->intended(route('admin.dashboard'));
     }
 
     public function logout(Request $request)

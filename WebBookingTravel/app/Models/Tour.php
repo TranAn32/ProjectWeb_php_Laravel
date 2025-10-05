@@ -8,18 +8,21 @@ class Tour extends Model
 {
     protected $table = 'tours';
     protected $primaryKey = 'tourID';
-    public $timestamps = false;
+    // Enable timestamps so Eloquent returns Carbon instances for created_at/updated_at
+    public $timestamps = true;
 
     protected $fillable = [
         'categoryID',
         'title',
         'description',
-        'images',      // JSON
-        'prices',      // JSON { adult, child, ... }
-        'itinerary',   // JSON
+        'image_path',   // single primary image path (physical or URL)
+        'images',       // JSON or CSV
+        'prices',       // JSON { adult, child, ... }
+        'itinerary',    // JSON
         'pickupPoint',
         'departurePoint',
-        'hotels',      // JSON
+        'destinationPoint',
+        'hotels',       // JSON
         'status',
     ];
 
@@ -45,35 +48,59 @@ class Tour extends Model
         return $this->belongsTo(Category::class, 'categoryID', 'categoryID');
     }
 
-    // Images are stored as JSON now. Return first image url if available.
-    public function getImagePathAttribute()
+    /**
+     * Accessor for image_path (primary tour image)
+     * Order of resolution:
+     *  1. Explicit DB column 'image_path' if set
+     *  2. First image derived from 'images' (JSON / CSV / array)
+     * Returns raw path/URL (caller can wrap with asset() if relative).
+     */
+    public function getImagePathAttribute($value)
     {
-        $raw = $this->images;
+        if (is_string($value) && trim($value) !== '') {
+            $val = trim($value);
+            if ($this->isAbsoluteUrl($val) || str_starts_with($val, '/')) return $val;
+            return asset($val);
+        }
 
-        // 1) String: try JSON, CSV, or single path
+        $raw = $this->attributes['images'] ?? $this->images ?? null;
+        if (!$raw) return null;
+
+        // If string: try JSON, CSV, or single
         if (is_string($raw)) {
-            $rawTrim = trim($raw);
-            if ($rawTrim === '') return null;
-            $decoded = json_decode($rawTrim, true);
-            if (json_last_error() === JSON_ERROR_NONE) {
-                $url = $this->extractFirstImageFromArray($decoded);
-                if ($url) return $url;
+            $trim = trim($raw);
+            if ($trim === '') return null;
+            $decoded = json_decode($trim, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $found = $this->extractFirstImageFromArray($decoded);
+                if ($found) return $this->normalizeImageReturn($found);
             }
-            if (strpos($rawTrim, ',') !== false) {
-                $parts = array_filter(array_map('trim', explode(',', $rawTrim)));
-                $url = $this->extractFirstImageFromArray(array_values($parts));
-                if ($url) return $url;
+            if (str_contains($trim, ',')) {
+                $parts = array_filter(array_map('trim', explode(',', $trim)));
+                $found = $this->extractFirstImageFromArray($parts);
+                if ($found) return $this->normalizeImageReturn($found);
             }
-            return $rawTrim; // single path string
+            return $this->normalizeImageReturn($trim); // single path
         }
 
-        // 2) Array or object-like decoded already
         if (is_array($raw)) {
-            $url = $this->extractFirstImageFromArray($raw);
-            if ($url) return $url;
+            $found = $this->extractFirstImageFromArray($raw);
+            if ($found) return $this->normalizeImageReturn($found);
         }
-
         return null;
+    }
+
+    protected function normalizeImageReturn(string $path): string
+    {
+        $path = trim($path);
+        if ($path === '') return $path;
+        if ($this->isAbsoluteUrl($path) || str_starts_with($path, '/')) return $path;
+        return asset($path);
+    }
+
+    protected function isAbsoluteUrl(string $val): bool
+    {
+        return str_starts_with($val, 'http://') || str_starts_with($val, 'https://') || str_starts_with($val, '//') || str_starts_with($val, 'data:');
     }
 
     protected function extractFirstImageFromArray($data)
@@ -120,17 +147,33 @@ class Tour extends Model
         return $this->tourID;
     }
 
-    // Accessors for derived prices from JSON
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'startDate'  => 'date',
+        'endDate'    => 'date',
+    ];
+
+    // Accessors for derived prices from JSON (fallback to legacy columns if present)
     public function getPriceAdultAttribute()
     {
-        $prices = $this->prices;
-        if (is_string($prices)) $prices = json_decode($prices, true);
-        return is_array($prices) && isset($prices['adult']) ? (float) $prices['adult'] : null;
+        // If legacy column exists in attributes and prices JSON empty -> use it
+        $rawCol = $this->attributes['priceAdult'] ?? null;
+        $prices = $this->attributes['prices'] ?? null;
+        if ($prices) {
+            if (is_string($prices)) $prices = json_decode($prices, true);
+            if (is_array($prices) && isset($prices['adult'])) return (float)$prices['adult'];
+        }
+        return $rawCol !== null ? (float)$rawCol : null;
     }
     public function getPriceChildAttribute()
     {
-        $prices = $this->prices;
-        if (is_string($prices)) $prices = json_decode($prices, true);
-        return is_array($prices) && isset($prices['child']) ? (float) $prices['child'] : null;
+        $rawCol = $this->attributes['priceChild'] ?? null;
+        $prices = $this->attributes['prices'] ?? null;
+        if ($prices) {
+            if (is_string($prices)) $prices = json_decode($prices, true);
+            if (is_array($prices) && isset($prices['child'])) return (float)$prices['child'];
+        }
+        return $rawCol !== null ? (float)$rawCol : null;
     }
 }
