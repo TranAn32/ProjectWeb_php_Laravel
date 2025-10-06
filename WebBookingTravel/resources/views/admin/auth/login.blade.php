@@ -4,157 +4,265 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng nhập Admin | TripGo</title>
+    <title>Đăng nhập | TripGo Travel Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background: #0d2538;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f7fa;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            padding: 20px;
         }
 
-        .auth-wrapper {
+        /* Login Card */
+        .login-card {
             width: 100%;
-            max-width: 440px;
-            padding: 28px 30px 34px;
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 10px 35px -5px rgba(0, 0, 0, .35);
-            position: relative;
+            max-width: 400px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(13, 36, 55, 0.08);
+            border: 1px solid #e1e8ed;
+            padding: 40px 32px;
         }
 
-        .brand {
+        /* Header */
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-title {
+            font-size: 24px;
             font-weight: 600;
-            font-size: 22px;
-            letter-spacing: .5px;
+            color: #0D2437;
+            margin-bottom: 6px;
         }
 
-        .small-link {
-            font-size: 12px;
+        .login-subtitle {
+            font-size: 14px;
+            color: #64748b;
         }
 
+        /* Form Labels */
         .form-label {
+            font-size: 14px;
             font-weight: 500;
+            color: #334155;
+            margin-bottom: 8px;
+            display: block;
         }
 
-        .floating-alert {
-            position: absolute;
-            top: -70px;
-            left: 0;
-            right: 0;
+        /* Form Inputs */
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 15px;
+            border: 1.5px solid #e1e8ed;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            background: white;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 20px;
         }
 
-        .logo-circle {
-            width: 54px;
-            height: 54px;
-            border-radius: 14px;
-            background: #134267;
-            color: #fff;
+        .form-input:focus {
+            outline: none;
+            border-color: #0D2437;
+            box-shadow: 0 0 0 3px rgba(13, 36, 55, 0.06);
+        }
+
+        .form-input::placeholder {
+            color: #94a3b8;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            background: #0D2437;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            background: #1a3a52;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Alert */
+        .alert-box {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #dc3545;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 20px;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 12px rgba(19, 66, 103, .4);
+            justify-content: space-between;
         }
 
-        .divider {
-            text-align: center;
-            position: relative;
-            margin: 24px 0 10px;
-        }
-
-        .divider span {
-            background: #fff;
-            padding: 0 10px;
-            position: relative;
-            z-index: 2;
-            font-size: 11px;
-            text-transform: uppercase;
-            font-weight: 600;
-            color: #6c7a86;
-            letter-spacing: .7px;
-        }
-
-        .divider:before {
-            content: "";
-            position: absolute;
-            inset: 50% 0 auto;
-            height: 1px;
-            background: #e2e6ea;
-            z-index: 1;
-        }
-
-        .form-check-label {
+        .alert-close {
+            background: none;
+            border: none;
+            color: #dc3545;
             cursor: pointer;
+            font-size: 18px;
+            padding: 0;
+            opacity: 0.6;
+        }
+
+        .alert-close:hover {
+            opacity: 1;
+        }
+
+        /* Validation */
+        .form-input.is-invalid {
+            border-color: #dc3545;
+        }
+
+        .error-text {
+            display: none;
+            font-size: 13px;
+            color: #dc3545;
+            margin-top: -16px;
+            margin-bottom: 16px;
+        }
+
+        .form-input.is-invalid + .error-text {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 32px 24px;
+            }
+
+            .login-title {
+                font-size: 22px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="auth-wrapper">
+    <div class="login-card">
+ 
+        <div class="login-header">
+            <h1 class="login-title">Đăng nhập</h1>
+            <p class="login-subtitle">Quản lý hệ thống TripGo Travel</p>
+        </div>
+
+    
         @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <div class="alert-box">
+                <span>{{ session('error') }}</span>
+                <button type="button" class="alert-close" onclick="this.parentElement.remove()">×</button>
             </div>
         @endif
         @if ($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
-                {{ $errors->first() }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <div class="alert-box">
+                <span>{{ $errors->first() }}</span>
+                <button type="button" class="alert-close" onclick="this.parentElement.remove()">×</button>
             </div>
         @endif
-        <div class="text-center mb-3">
-            <div class="logo-circle mx-auto">TG</div>
-            <div class="brand">TripGo Admin</div>
-            <div class="text-muted small mt-1">Đăng nhập bảng điều khiển quản trị</div>
-        </div>
-        <form method="POST" action="{{ route('admin.login.post') }}" novalidate class="needs-validation">
+
+  
+        <form method="POST" action="{{ route('admin.login.post') }}" novalidate>
             @csrf
-            <div class="mb-3">
+
+            <div>
                 <label class="form-label">Email</label>
-                <input type="email" name="email" value="{{ old('email') }}" class="form-control" required
-                    autofocus>
-                <div class="invalid-feedback">Vui lòng nhập email hợp lệ.</div>
+                <input type="email" 
+                       name="email" 
+                       value="{{ old('email') }}" 
+                       class="form-input"
+                       placeholder="admin@tripgo.com" 
+                       required 
+                       autofocus>
+                <div class="error-text">Vui lòng nhập email hợp lệ</div>
             </div>
-            <div class="mb-2">
-                <label class="form-label d-flex justify-content-between align-items-center">Mật khẩu
-                    <a href="#" class="small-link text-decoration-none">Quên?</a>
-                </label>
-                <input type="password" name="password" class="form-control" required minlength="3">
-                <div class="invalid-feedback">Nhập mật khẩu.</div>
+
+         
+            <div>
+                <label class="form-label">Mật khẩu</label>
+                <input type="password" 
+                       name="password" 
+                       class="form-input" 
+                       placeholder="Nhập mật khẩu"
+                       required 
+                       minlength="3">
+                <div class="error-text">Vui lòng nhập mật khẩu</div>
             </div>
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div class="form-check m-0">
-                    <input type="checkbox" class="form-check-input" id="remember" name="remember" value="1">
-                    <label for="remember" class="form-check-label">Ghi nhớ</label>
-                </div>
-            </div>
-            <button class="btn btn-primary w-100 py-2 fw-semibold"><i class="fa fa-right-to-bracket me-1"></i> Đăng
-                nhập</button>
+
+           
+            <button type="submit" class="submit-btn">Đăng nhập</button>
         </form>
-        <div class="divider"><span>Bảo mật nội bộ</span></div>
-        <p class="text-center small text-muted mb-0">&copy; {{ date('Y') }} TripGo. All rights reserved.</p>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         (function() {
-            const form = document.querySelector('.needs-validation');
-            if (form) {
-                form.addEventListener('submit', e => {
-                    if (!form.checkValidity()) {
-                        e.preventDefault();
-                        e.stopPropagation();
+            const form = document.querySelector('form');
+            
+            form.addEventListener('submit', function(e) {
+                const inputs = form.querySelectorAll('.form-input[required]');
+                let isValid = true;
+
+                inputs.forEach(input => {
+                    if (!input.value.trim() || !input.checkValidity()) {
+                        input.classList.add('is-invalid');
+                        isValid = false;
+                    } else {
+                        input.classList.remove('is-invalid');
                     }
-                    form.classList.add('was-validated');
                 });
-            }
+
+                if (!isValid) {
+                    e.preventDefault();
+                }
+            });
+
+            // Remove error on input
+            const inputs = form.querySelectorAll('.form-input');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    if (this.value.trim() && this.checkValidity()) {
+                        this.classList.remove('is-invalid');
+                    }
+                });
+            });
+
+            // Auto dismiss alerts
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.alert-box');
+                alerts.forEach(alert => {
+                    alert.style.transition = 'opacity 0.3s';
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 300);
+                });
+            }, 8000);
         })();
     </script>
 </body>

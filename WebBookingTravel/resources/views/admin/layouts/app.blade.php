@@ -242,6 +242,15 @@
             padding: .35rem .7rem;
         }
 
+        /* Ensure user dropdown stays at far right */
+        .topbar .d-flex.align-items-center.gap-3 {
+            margin-left: auto;
+        }
+
+        .topbar .dropdown {
+            margin-left: auto;
+        }
+
         /* (Removed tour-specific styles; now localized in view) */
 
         @media (max-width: 991px) {
@@ -280,9 +289,11 @@
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="brand d-flex align-items-center justify-content-between">
-                <a href="{{ route('admin.dashboard') }}" class="text-white text-decoration-none">TripGo Admin</a>
-                <button class="btn btn-sm btn-outline-light sidebar-toggle d-lg-none" onclick="toggleSidebar()"><i
-                        class="fa fa-times"></i></button>
+
+                <div class="logo-outer">
+                    <div class="logo"><a href="{{ route('admin.dashboard') }}"><img
+                                src="{{ asset('assets/images/logos/logo.png') }}" alt="Logo"></a></div>
+                </div>
             </div>
             <nav class="flex-grow-1 mt-2">
                 <div class="nav-section">
@@ -300,20 +311,10 @@
                         <li><a class="@if (request()->routeIs('admin.users.*')) active @endif"
                                 href="{{ route('admin.users.index') }}"><i class="fa fa-users"></i> <span>Người
                                     dùng</span></a></li>
-                        <li><a class="@if (request()->routeIs('admin.promotions.*')) active @endif"
-                                href="{{ url('/admin/promotions') }}"><i class="fa fa-gift"></i> <span>Khuyến
-                                    mãi</span></a></li>
-                        <li><a class="@if (request()->routeIs('admin.reports.*')) active @endif"
-                                href="{{ url('/admin/reports') }}"><i class="fa fa-chart-line"></i> <span>Báo
-                                    cáo</span></a></li>
-                        <li><a class="@if (request()->routeIs('admin.media.*')) active @endif"
-                                href="{{ url('/admin/media') }}"><i class="fa fa-photo-film"></i> <span>Media</span></a>
-                        </li>
                     </ul>
                 </div>
             </nav>
-            <div class="px-3 py-3 small" style="border-top:1px solid rgba(255,255,255,0.08); opacity:.7;">&copy;
-                {{ date('Y') }} TripGo</div>
+
         </aside>
 
         <!-- Main -->

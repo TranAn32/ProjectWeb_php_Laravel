@@ -112,28 +112,44 @@ class TourController extends Controller
              }
          }
 
-         // Handle hotel images upload (if any hotel images are uploaded)
-         $hotelsData = [];
-         if (!empty($validatedData['hotels'])) {
-             $hotelsArray = json_decode($validatedData['hotels'], true);
-             if (json_last_error() === JSON_ERROR_NONE && is_array($hotelsArray)) {
-                 // Ensure hotels directory exists
-                 $hotelsPath = public_path('assets/images/hotels');
-                 if (!file_exists($hotelsPath)) {
-                     mkdir($hotelsPath, 0755, true);
-                     Log::info('Created hotels directory: ' . $hotelsPath);
-                 }
+        // Handle hotel images upload mapped by index order
+        $hotelsData = [];
+        if (!empty($validatedData['hotels'])) {
+            $hotelsArray = json_decode($validatedData['hotels'], true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($hotelsArray)) {
+                $hotelFiles = $request->file('hotel_images', []);
+                $hotelsPath = public_path('assets/images/hotels');
+                if (!file_exists($hotelsPath)) {
+                    mkdir($hotelsPath, 0755, true);
+                    Log::info('Created hotels directory: ' . $hotelsPath);
+                }
 
-                 foreach ($hotelsArray as $hotel) {
-                     if (!empty($hotel['name'])) {
-                         // Generate hotel image filename based on hotel name
-                         $hotelImageName = strtolower(str_replace(' ', '-', $hotel['name'])) . '.jpg';
-                         $hotel['image'] = 'assets/images/hotels/' . $hotelImageName;
-                         $hotelsData[] = $hotel;
-                     }
-                 }
-             }
-         }
+                foreach ($hotelsArray as $index => $hotel) {
+                    if (empty($hotel['name'])) {
+                        continue;
+                    }
+
+                    // Default to existing image field if provided
+                    $imagePathForHotel = isset($hotel['image']) ? $hotel['image'] : null;
+
+                    // If a file was uploaded for this hotel index, save it and override image path
+                    if (isset($hotelFiles[$index]) && $hotelFiles[$index] && $hotelFiles[$index]->isValid()) {
+                        try {
+                            $extension = $hotelFiles[$index]->getClientOriginalExtension();
+                            $safeBase = preg_replace('/[^a-z0-9\-]/', '', strtolower(str_replace(' ', '-', $hotel['name'])));
+                            $filename = $safeBase . '-' . uniqid() . '.' . $extension;
+                            $hotelFiles[$index]->move($hotelsPath, $filename);
+                            $imagePathForHotel = 'assets/images/hotels/' . $filename;
+                        } catch (\Exception $e) {
+                            Log::error('Error uploading hotel image at index ' . $index . ': ' . $e->getMessage());
+                        }
+                    }
+
+                    $hotel['image'] = $imagePathForHotel;
+                    $hotelsData[] = $hotel;
+                }
+            }
+        }
 
          Log::info('Final image data', ['images' => $imageData]);
 
@@ -199,8 +215,114 @@ class TourController extends Controller
     public function update(Request $request, $id)
     {
         $tour = Tour::findOrFail($id);
-        $data = $this->validatedData($request, $tour->tourID);
-        $tour->update($data);
+
+        // Validate base fields (without file arrays)
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'departurePoint' => ['nullable', 'string', 'max:255'],
+            'pickupPoint' => ['nullable', 'string', 'max:255'],
+            'status' => ['nullable', 'in:draft,published,canceled'],
+            'priceAdult' => ['nullable', 'numeric', 'min:0'],
+            'priceChild' => ['nullable', 'numeric', 'min:0'],
+            'prices' => ['nullable', 'string'],
+            'itinerary' => ['nullable', 'string'],
+            'hotels' => ['nullable', 'string'],
+        ]);
+
+        // Start from existing data
+        $updateData = [
+            'title' => $validated['title'],
+            'description' => $validated['description'] ?? $tour->description,
+            'pickupPoint' => $validated['pickupPoint'] ?? $tour->pickupPoint,
+            'departurePoint' => $validated['departurePoint'] ?? $tour->departurePoint,
+            'status' => $validated['status'] ?? $tour->status,
+        ];
+
+        // Prices JSON
+        if (!empty($validated['priceAdult']) || !empty($validated['priceChild'])) {
+            $updateData['prices'] = json_encode([
+                'adult' => isset($validated['priceAdult']) ? (float)$validated['priceAdult'] : null,
+                'child' => isset($validated['priceChild']) ? (float)$validated['priceChild'] : null,
+            ]);
+        } elseif (!empty($validated['prices'])) {
+            json_decode($validated['prices'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $updateData['prices'] = $validated['prices'];
+            }
+        }
+
+        // Itinerary JSON
+        if (isset($validated['itinerary']) && $validated['itinerary'] !== '') {
+            json_decode($validated['itinerary'], true);
+            $updateData['itinerary'] = json_last_error() === JSON_ERROR_NONE
+                ? $validated['itinerary']
+                : json_encode([$validated['itinerary']]);
+        }
+
+        // Handle gallery images replacement if provided
+        $newImagesFiles = $request->file('images', $request->file('gallery', []));
+        if (!empty($newImagesFiles)) {
+            $toursPath = public_path('assets/images/tours');
+            if (!file_exists($toursPath)) {
+                mkdir($toursPath, 0755, true);
+            }
+            $newImageData = [];
+            foreach ($newImagesFiles as $index => $image) {
+                if (!$image || !$image->isValid()) {
+                    continue;
+                }
+                $extension = $image->getClientOriginalExtension();
+                $filename = uniqid() . '.' . $extension;
+                try {
+                    $image->move($toursPath, $filename);
+                    $newImageData[] = [
+                        'url' => 'assets/images/tours/' . $filename,
+                        'description' => ($validated['title'] ?? $tour->title) . ' - Ảnh ' . ($index + 1),
+                    ];
+                } catch (\Exception $e) {
+                    Log::error('Update: error moving tour image ' . $filename . ': ' . $e->getMessage());
+                }
+            }
+            if (!empty($newImageData)) {
+                $updateData['images'] = json_encode($newImageData);
+            }
+        }
+
+        // Handle hotels and hotel image uploads by index
+        if (!empty($validated['hotels'])) {
+            $hotelsArray = json_decode($validated['hotels'], true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($hotelsArray)) {
+                $hotelFiles = $request->file('hotel_images', []);
+                $hotelsPath = public_path('assets/images/hotels');
+                if (!file_exists($hotelsPath)) {
+                    mkdir($hotelsPath, 0755, true);
+                }
+                $processedHotels = [];
+                foreach ($hotelsArray as $index => $hotel) {
+                    if (empty($hotel['name'])) {
+                        continue;
+                    }
+                    $imagePathForHotel = isset($hotel['image']) ? $hotel['image'] : null;
+                    if (isset($hotelFiles[$index]) && $hotelFiles[$index] && $hotelFiles[$index]->isValid()) {
+                        try {
+                            $extension = $hotelFiles[$index]->getClientOriginalExtension();
+                            $safeBase = preg_replace('/[^a-z0-9\-]/', '', strtolower(str_replace(' ', '-', $hotel['name'])));
+                            $filename = $safeBase . '-' . uniqid() . '.' . $extension;
+                            $hotelFiles[$index]->move($hotelsPath, $filename);
+                            $imagePathForHotel = 'assets/images/hotels/' . $filename;
+                        } catch (\Exception $e) {
+                            Log::error('Update: error uploading hotel image at index ' . $index . ': ' . $e->getMessage());
+                        }
+                    }
+                    $hotel['image'] = $imagePathForHotel;
+                    $processedHotels[] = $hotel;
+                }
+                $updateData['hotels'] = json_encode($processedHotels);
+            }
+        }
+
+        $tour->update($updateData);
         return back()->with('success', 'Đã cập nhật');
     }
 

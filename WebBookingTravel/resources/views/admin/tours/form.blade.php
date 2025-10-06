@@ -6,11 +6,360 @@
     <li class="breadcrumb-item"><a href="{{ route('admin.tours.index') }}">Tours</a></li>
     <li class="breadcrumb-item active">{{ $tour->exists ? 'Sửa' : 'Thêm' }}</li>
 @endsection
-@section('page_actions')
-    <a href="{{ route('admin.tours.index') }}" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-left me-1"></i>
-        Quay lại</a>
-@endsection
+
+@push('styles')
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    /* Global Styles */
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #f5f7fa;
+    }
+    
+    /* Modern Card Styling */
+    .modern-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(13, 36, 55, 0.08);
+        border: 1px solid rgba(13, 36, 55, 0.06);
+        margin-bottom: 24px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        
+    }
+    
+    .modern-card:hover {
+        box-shadow: 0 4px 12px rgba(13, 36, 55, 0.12);
+    }
+    
+    /* Card Header */
+    .modern-card-header {
+        background: linear-gradient(135deg, #0D2437 0%, #1a3a52 100%);
+        color: white;
+        padding: 20px 28px;
+        border-bottom: none;
+    }
+    
+    .modern-card-header h5 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0;
+        letter-spacing: -0.3px;
+    }
+    
+    .modern-card-header .badge {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        font-weight: 500;
+        padding: 4px 10px;
+        border-radius: 6px;
+    }
+    
+    /* Card Body */
+    .modern-card-body {
+        padding: 32px 28px;
+    }
+    
+    /* Form Labels */
+    .modern-label {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: #495057;
+        margin-bottom: 8px;
+        display: block;
+    }
+    
+    /* Form Controls */
+    .modern-input,
+    .modern-select,
+    .modern-textarea {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 15px;
+        border: 1.5px solid #e1e8ed;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+        background: white;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    /* .modern-input:focus,
+    .modern-select:focus,
+    .modern-textarea:focus {
+        outline: none;
+        border-color: #2b353d;
+        box-shadow: 0 0 0 4px rgba(13, 36, 55, 0.08);
+    } */
+    
+    .modern-textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+    
+    .modern-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%230D2437' d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 40px;
+        cursor: pointer;
+    }
+    
+    /* Image Upload Area */
+    .modern-upload-area {
+        border: 2px dashed #cbd5e0;
+        border-radius: 12px;
+        text-align: center;
+        background: #f8fafc;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        min-height: 20px;
+        width: 12px
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .modern-upload-area:hover {
+        border-color: #0D2437;
+        background: #f1f5f9;
+    }
+    
+    .upload-icon {
+        font-size: 48px;
+        margin-bottom: 12px;
+        opacity: 0.6;
+    }
+    
+    .upload-text {
+        font-size: 15px;
+        font-weight: 500;
+        color: #334155;
+        margin-bottom: 6px;
+    }
+    
+    .upload-hint {
+        font-size: 13px;
+        color: #94a3b8;
+    }
+    
+    /* Image Preview Grid */
+    .image-preview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+        margin-top: 16px;
+    }
+    
+    .image-preview-item {
+        position: relative;
+        aspect-ratio: 4/3;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 2px solid #e1e8ed;
+        background: #f8fafc;
+        transition: all 0.2s ease;
+    }
+    
+    .image-preview-item:hover {
+        border-color: #0D2437;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(13, 36, 55, 0.15);
+    }
+    
+    .image-preview-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .cover-badge {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background: #0D2437;
+        color: white;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Hotel Cards */
+    .hotel-card {
+        background: #f8fafc;
+        border: 1.5px solid #e1e8ed;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    
+    .hotel-card-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #0D2437;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #e1e8ed;
+    }
+    
+    /* Buttons */
+    .modern-btn {
+        padding: 12px 28px;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 10px;
+        border: none;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .modern-btn-primary {
+        background: #0D2437;
+        color: white;
+    }
+    
+    .modern-btn-primary:hover {
+        background: #1a3a52;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(13, 36, 55, 0.25);
+    }
+    
+    .modern-btn-secondary {
+        background: #e1e8ed;
+        color: #334155;
+    }
+    
+    .modern-btn-secondary:hover {
+        background: #cbd5e0;
+    }
+    
+    .modern-btn-lg {
+        padding: 16px 48px;
+        font-size: 16px;
+    }
+    
+    /* Alert Boxes */
+    .modern-alert {
+        padding: 16px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        border-left: 4px solid;
+    }
+    
+    .modern-alert-info {
+        background: #e8f4f8;
+        border-color: #0D2437;
+        color: #0D2437;
+    }
+    
+    .modern-alert-warning {
+        background: #fff8e1;
+        border-color: #ffa726;
+        color: #e65100;
+    }
+    
+    /* Grid Layouts */
+    .form-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    
+    .form-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    /* Back Button */
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background: white;
+        border: 1.5px solid #e1e8ed;
+        border-radius: 10px;
+        color: #334155;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 14px;
+        transition: all 0.2s ease;
+        margin-bottom: 20px;
+    }
+    
+    .back-btn:hover {
+        border-color: #0D2437;
+        color: #0D2437;
+        transform: translateX(-4px);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .form-grid-2,
+        .form-grid-3 {
+            grid-template-columns: 1fr;
+        }
+        
+        .modern-card-body {
+            padding: 24px 20px;
+        }
+        
+        .modern-card-header {
+            padding: 16px 20px;
+        }
+        
+        .image-preview-grid {
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        }
+    }
+    
+    /* Required Asterisk */
+    .text-danger {
+        color: #dc3545;
+        margin-left: 4px;
+    }
+    
+    /* Tooltip Hint */
+    .hint-icon {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        background: #94a3b8;
+        color: white;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 16px;
+        font-size: 11px;
+        margin-left: 6px;
+        cursor: help;
+    }
+</style>
+@endpush
+
 @section('content')
+<div class="container-fluid">
+    <a href="{{ route('admin.tours.index') }}" class="back-btn">
+        <i class="bi bi-arrow-left"></i>
+        <span>Quay lại</span>
+    </a>
+
     <form method="post"
         action="{{ $tour->exists ? route('admin.tours.update', $tour->tourID) : route('admin.tours.store') }}"
         enctype="multipart/form-data" class="needs-validation" novalidate>
@@ -18,122 +367,190 @@
         @if ($tour->exists)
             @method('PUT')
         @endif
-        <div class="card shadow-sm" id="singleScreenCard">
-            <div class="card-header d-flex flex-wrap gap-2 align-items-center justify-content-between py-2">
-                <div class="d-flex align-items-center gap-2">
-                    <h5 class="mb-0">{{ $tour->exists ? 'Sửa Tour' : 'Thêm Tour Mới' }}</h5>
-                    @if ($tour->exists)
-                        <span class="badge bg-secondary">#{{ $tour->tourID }}</span>
-                    @endif
-                </div>
-               
-            </div>
-            <div class="card-body p-3">
-                <div class="row g-2">
-                    <!-- Thông tin cơ bản - cột trái -->
-                    <div class="col-md-4">
-                        <div class="row g-2">
-                            <div class="col-12">
-                                <label class="form-label-xs">Tên tour <span class="text-danger">*</span></label>
-                                <input type="text" name="title" value="{{ old('title', $tour->title) }}"
-                                    class="form-control form-control-sm" required placeholder="Nhập tên tour">
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label-xs">Khởi hành</label>
+        
+        <div class="modern-card">
+            <div class="modern-card-body">
+                <div class="row g-4">
+                     <label class="modern-label" style="font-weight: 700"> Thông tin cơ bản </label>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="modern-label">Tên tour <span class="text-danger">*</span></label>
+                            <input type="text" name="title" value="{{ old('title', $tour->title) }}"
+                                class="modern-input" required >
+                        </div>
+
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label class="modern-label">Điểm khởi hành</label>
                                 <input type="text" name="departurePoint"
                                     value="{{ old('departurePoint', $tour->departurePoint) }}"
-                                    class="form-control form-control-sm" placeholder="Hà Nội">
+                                    class="modern-input">
                             </div>
-                            <div class="col-6">
-                                <label class="form-label-xs">Điểm đến</label>
+                            <div class="form-group">
+                                <label class="modern-label">Điểm đến</label>
                                 <input type="text" name="destinationPoint"
                                     value="{{ old('destinationPoint', $tour->destinationPoint) }}"
-                                    class="form-control form-control-sm" placeholder="Hạ Long">
+                                    class="modern-input" >
                             </div>
-                            <div class="col-6">
-                                <label class="form-label-xs">Giá NL</label>
+                        </div>
+
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label class="modern-label">Giá người lớn (VNĐ)</label>
                                 <input type="number" min="0" name="priceAdult"
-                                    value="{{ old('priceAdult', $tour->priceAdult) }}" class="form-control form-control-sm"
-                                    placeholder="2600000">
+                                    value="{{ old('priceAdult', $tour->priceAdult) }}" class="modern-input"
+                                    >
                             </div>
-                            <div class="col-6">
-                                <label class="form-label-xs">Giá TE</label>
+                            <div class="form-group">
+                                <label class="modern-label">Giá trẻ em (VNĐ)</label>
                                 <input type="number" min="0" name="priceChild"
-                                    value="{{ old('priceChild', $tour->priceChild) }}" class="form-control form-control-sm"
-                                    placeholder="1600000">
+                                    value="{{ old('priceChild', $tour->priceChild) }}" class="modern-input"
+                                   >
                             </div>
-                            <div class="col-12">
-                                <label class="form-label-xs">Trạng thái</label>
-                                @php($status = old('status', $tour->status))
-                                <select name="status" class="form-select form-select-sm">
-                                    <option value="draft" @selected($status === 'draft')>Nháp</option>
-                                    <option value="published" @selected($status === 'published')>Công khai</option>
-                                    <option value="canceled" @selected($status === 'canceled')>Hủy</option>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="modern-label">Trạng thái</label>
+                            @php($status = old('status', $tour->status))
+                            <select name="status" class="modern-select">
+                                <option value="draft" @selected($status === 'draft')>Nháp</option>
+                                <option value="published" @selected($status === 'published')>Công khai</option>
+                                <option value="canceled" @selected($status === 'canceled')>Hủy</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    
+                    <div class="col-lg-4">
+                        <label class="modern-label">Hình ảnh tour <span class="text-danger">*</span></label>
+                        <div class="modern-upload-area" onclick="document.getElementById('galleryInput').click()" style="width: 250px;">
+                            <i class="bi bi-patch-plus"></i> Thêm ảnh
+                        </div>
+                        <input type="file" id="galleryInput" name="images[]" accept="image/*" multiple
+                            style="display: none;" @if(!$tour->exists) required @endif>
+                        <div id="imagePreviewGrid" class="image-preview-grid"></div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="modern-label">Mô tả tour</label>
+                            <textarea name="description" class="modern-textarea" rows="8"
+                               >{{ old('description', $tour->description) }}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modern-card">
+            <div class="modern-card-body">
+                <div class="form-group">
+                    <label class="modern-label" style="font-weight: 700">Lịch trình tour</label>
+                    <textarea id="itineraryText" name="itinerary_text" class="modern-textarea" rows="8"
+                        >{{ old('itinerary_text', '') }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="modern-card">
+            <div class="modern-card-body" id="hotelsFixed">
+                 <label class="modern-label" style="font-weight: 700">  Khách sạn  </label>
+                <div class="hotel-card" data-slot="1">
+                    <div class="hotel-card-title">Khách sạn 1</div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="modern-label">Tên khách sạn <span class="text-danger">*</span></label>
+                                <input type="text" class="modern-input hotel-name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="modern-label">Hạng sao <span class="text-danger">*</span></label>
+                                <select class="modern-select hotel-rating" required>
+                                    <option value="">Chọn hạng sao</option>
+                                    <option value="1">⭐ 1 sao</option>
+                                    <option value="2">⭐⭐ 2 sao</option>
+                                    <option value="3">⭐⭐⭐ 3 sao</option>
+                                    <option value="4">⭐⭐⭐⭐ 4 sao</option>
+                                    <option value="5">⭐⭐⭐⭐⭐ 5 sao</option>
                                 </select>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Ảnh tour - cột giữa -->
-                    <div class="col-md-4">
-                        <label class="form-label-xs">Ảnh tour <span class="text-danger">*</span></label>
-                        <div id="galleryStrip" class="border rounded p-2 mb-2 bg-light overflow-auto" style="height:160px;">
-                            <div class="text-muted small text-center" id="galleryPlaceholder" style="line-height:140px;">
-                                Chưa chọn ảnh</div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="modern-label">Giá phòng đơn (VNĐ)</label>
+                                <input type="number" class="modern-input hotel-single-price">
+                            </div>
                         </div>
-                        <input type="file" id="galleryInput" name="images[]" accept="image/*" multiple
-                            class="btn btn-outline-primary btn-sm w-100" style="font-size:11px;" required>
-                    </div>
-
-                    <!-- Mô tả và actions - cột phải -->
-                    <div class="col-md-4">
-                        <label class="form-label-xs">Mô tả tour</label>
-                        <textarea name="description" rows="6" class="form-control form-control-sm mb-2"
-                            placeholder="Mô tả ngắn gọn về tour...">{{ old('description', $tour->description) }}</textarea>
-                        <div class="d-flex gap-1">
-                            <a href="{{ route('admin.tours.index') }}" class="btn btn-secondary btn-sm flex-fill">Hủy</a>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="modern-label">Giá phòng đôi (VNĐ)</label>
+                                <input type="number" class="modern-input hotel-double-price">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="modern-label">Hình ảnh khách sạn</label>
+                            <div class="modern-upload-area hotel-image-preview" onclick="this.nextElementSibling.click()" style="width: 150px;">
+                                 <i class="bi bi-patch-plus"></i> Thêm ảnh
+                            </div>
+                            <input type="file" class="hotel-image" accept="image/*" name="hotel_images[]" style="display: none;">
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Box Lịch trình -->
-        <div class="card shadow-sm mt-3">
-            <div class="card-header d-flex align-items-center justify-content-between py-2">
-                <h6 class="mb-0"><i class="fa fa-route me-2"></i>Lịch trình tour</h6>
-            </div>
-            <div class="card-body p-3">
-                <label class="form-label-xs mb-2">Nhập lịch trình chi tiết (mỗi dòng là 1 ngày)</label>
-                <textarea id="itineraryText" name="itinerary_text" class="form-control" rows="6"
-                    placeholder="Ngày 1: Hà Nội - Hạ Long - Tham quan hang động
-Ngày 2: Chèo kayak - Làng chài - Trở về Hà Nội
-Ngày 3: ...">{{ old('itinerary_text', '') }}</textarea>
-                <div class="form-text mt-1">
-                    <i class="fa fa-info-circle"></i> Mỗi dòng tương ứng với 1 ngày. Hệ thống sẽ tự động tách thành từng
-                    ngày.
+                <div class="hotel-card" data-slot="2">
+                    <div class="row g-3">
+                        <div class="hotel-card-title">Khách sạn 2</div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="modern-label">Tên khách sạn <span class="text-danger">*</span></label>
+                                <input type="text" class="modern-input hotel-name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="modern-label">Hạng sao <span class="text-danger">*</span></label>
+                                <select class="modern-select hotel-rating" required>
+                                    <option value="">Chọn hạng sao</option>
+                                    <option value="1">⭐ 1 sao</option>
+                                    <option value="2">⭐⭐ 2 sao</option>
+                                    <option value="3">⭐⭐⭐ 3 sao</option>
+                                    <option value="4">⭐⭐⭐⭐ 4 sao</option>
+                                    <option value="5">⭐⭐⭐⭐⭐ 5 sao</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="modern-label">Giá phòng đơn (VNĐ)</label>
+                                <input type="number" class="modern-input hotel-single-price">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="modern-label">Giá phòng đôi (VNĐ)</label>
+                                <input type="number" class="modern-input hotel-double-price" >
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="modern-label">Hình ảnh khách sạn</label>
+                            <div class="modern-upload-area hotel-image-preview" onclick="this.nextElementSibling.click()" style="width: 150px;">
+                                 <i class="bi bi-patch-plus"></i> Thêm ảnh
+                            </div>
+                            <input type="file" class="hotel-image" accept="image/*" name="hotel_images[]" style="display: none;">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Box Khách sạn -->
-        <div class="card shadow-sm mt-3">
-            <div class="card-header d-flex align-items-center justify-content-between py-2">
-                <h6 class="mb-0"><i class="fa fa-hotel me-2"></i>Thông tin khách sạn</h6>
-            </div>
-            <div class="card-body p-3">
-                <div class="alert alert-info alert-sm mb-3">
-                    <i class="fa fa-info-circle"></i> Thêm thông tin khách sạn cho tour. Ảnh sẽ được lưu tự động.
-                </div>
-                <div id="hotelsContainer"></div>
-            </div>
-        </div>
-
-        <!-- Nút Lưu ở cuối -->
-        <div class="card shadow-sm mt-3">
-            <div class="card-body p-3 text-center">
-                <button type="submit" class="btn btn-success btn-lg px-5">
-                    <i class="fa fa-save me-2"></i>Lưu Tour
+      
+        <div class="modern-card">
+            <div class="modern-card-body text-center">
+                <button type="submit" class="modern-btn modern-btn-primary modern-btn-lg">
+                    <i class="bi bi-save"></i>
+                    <span>Lưu Tour</span>
                 </button>
             </div>
         </div>
@@ -141,351 +558,162 @@ Ngày 3: ...">{{ old('itinerary_text', '') }}</textarea>
         <input type="hidden" name="itinerary" id="itineraryInput" />
         <input type="hidden" name="hotels" id="hotelsInput" />
     </form>
-    @push('scripts')
-        <script>
-            // Helpers to parse safe JSON
-            function safeJsonParse(val, fallback) {
-                if (!val || !val.trim()) return fallback;
-                try {
-                    return JSON.parse(val);
-                } catch {
-                    return fallback;
-                }
-            }
+</div>
 
-            // Đảm bảo DOM đã load hoàn toàn
-            document.addEventListener('DOMContentLoaded', function() {
-                console.log('DOM fully loaded');
-                initializeHotelsSection();
-            });
+@push('scripts')
+<script>
+    // ... existing code ...
+    
+    function safeJsonParse(val, fallback) {
+        if (val === undefined || val === null) return fallback;
+        if (typeof val === 'object') return val;
+        if (typeof val === 'string') {
+            const str = val.trim();
+            if (!str) return fallback;
+            try { return JSON.parse(str); } catch { return fallback; }
+        }
+        return fallback;
+    }
 
-            // Backup: khởi tạo ngay nếu DOM đã sẵn sàng
-            if (document.readyState === 'loading') {
-                console.log('DOM is still loading...');
-            } else {
-                console.log('DOM already loaded, initializing immediately');
-                setTimeout(initializeHotelsSection, 100);
-            }
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeHotelsSection();
+    });
 
-            // Seed existing data from old() or model
-            const existingImages = safeJsonParse(@json(old('images', is_string($tour->images) ? $tour->images : json_encode($tour->images))), []);
-            const existingItinerary = safeJsonParse(@json(old('itinerary', is_string($tour->itinerary) ? $tour->itinerary : json_encode($tour->itinerary))), []);
-            const existingHotels = safeJsonParse(@json(old('hotels', is_string($tour->hotels) ? $tour->hotels : json_encode($tour->hotels))), []);
+    if (document.readyState !== 'loading') {
+        setTimeout(initializeHotelsSection, 100);
+    }
 
-            // Elements
-            const itineraryInput = document.getElementById('itineraryInput');
-            const hotelsInput = document.getElementById('hotelsInput');
-            const galleryInput = document.getElementById('galleryInput');
-            const galleryStrip = document.getElementById('galleryStrip');
-            const galleryPlaceholder = document.getElementById('galleryPlaceholder');
-            const itineraryText = document.getElementById('itineraryText');
-            const hotelsContainer = document.getElementById('hotelsContainer');
-            const addHotelBtn = document.getElementById('addHotelBtn');
+    const existingImages = safeJsonParse(@json(old('images', is_string($tour->images) ? $tour->images : json_encode($tour->images))), []);
+    const existingItinerary = safeJsonParse(@json(old('itinerary', is_string($tour->itinerary) ? $tour->itinerary : json_encode($tour->itinerary))), []);
+    const existingHotels = safeJsonParse(@json(old('hotels', is_string($tour->hotels) ? $tour->hotels : json_encode($tour->hotels))), []);
 
-            let hotelCounter = 0;
+    const itineraryInput = document.getElementById('itineraryInput');
+    const hotelsInput = document.getElementById('hotelsInput');
+    const galleryInput = document.getElementById('galleryInput');
+    const imagePreviewGrid = document.getElementById('imagePreviewGrid');
+    const itineraryText = document.getElementById('itineraryText');
+    const hotelsFixed = document.getElementById('hotelsFixed');
 
-            // Debug: Check if elements exist
-            console.log('Elements found:', {
-                addHotelBtn: !!addHotelBtn,
-                hotelsContainer: !!hotelsContainer,
-                itineraryText: !!itineraryText
-            });
+    // <CHANGE> Updated image preview to use modern grid layout
+    galleryInput?.addEventListener('change', e => {
+        const files = Array.from(e.target.files || []);
+        imagePreviewGrid.innerHTML = '';
+        
+        if (!files.length) return;
 
-            // Xử lý upload ảnh tour
-            galleryInput?.addEventListener('change', e => {
-                const files = Array.from(e.target.files || []);
-                galleryStrip.innerHTML = '';
-                if (!files.length) {
-                    galleryStrip.appendChild(galleryPlaceholder);
-                    return;
-                }
-
-                const grid = document.createElement('div');
-                grid.className = 'd-flex flex-wrap gap-1';
-
-                files.forEach((file, idx) => {
-                    const thumb = document.createElement('div');
-                    thumb.className = 'border rounded overflow-hidden bg-white';
-                    thumb.style.width = '60px';
-                    thumb.style.height = '60px';
-
-                    const reader = new FileReader();
-                    reader.onload = ev => {
-                        thumb.innerHTML = `
-                            <img src="${ev.target.result}" class="w-100 h-100" style="object-fit:cover;" alt="thumb">
-                            ${idx === 0 ? '<div class="position-absolute top-0 start-0"><span class="badge bg-primary" style="font-size:8px;">Cover</span></div>' : ''}
-                        `;
-                        thumb.style.position = 'relative';
-                    };
-                    reader.readAsDataURL(file);
-                    grid.appendChild(thumb);
-                });
-
-                galleryStrip.appendChild(grid);
-            });
-
-            // Khởi tạo lịch trình từ dữ liệu có sẵn
-            if (existingItinerary.length > 0) {
-                const itineraryLines = existingItinerary.map(item =>
-                    `Ngày ${item.day}: ${item.activity}`
-                ).join('\n');
-                if (itineraryText) itineraryText.value = itineraryLines;
-            }
-
-            // Function để khởi tạo section khách sạn
-            function initializeHotelsSection() {
-                const container = document.getElementById('hotelsContainer');
-                console.log('Hotels container found:', !!container);
-                console.log('Existing hotels count:', existingHotels.length);
-
-                if (container) {
-                    // Clear container first
-                    container.innerHTML = '';
-
-                    if (existingHotels.length > 0) {
-                        console.log('Loading existing hotels...');
-                        existingHotels.forEach(hotel => {
-                            const hotelForm = createHotelForm(hotel);
-                            container.appendChild(hotelForm);
-                        });
-                    } else {
-                        // Tạo ít nhất 1 form khách sạn trống khi không có dữ liệu
-                        console.log('Creating empty hotel form...');
-                        const hotelForm = createHotelForm();
-                        container.appendChild(hotelForm);
-                        console.log('Hotel form added to container');
-                    }
-                } else {
-                    console.error('Hotels container not found!');
-                }
-            }
-
-            // Tạo form khách sạn
-            function createHotelForm(hotel = {}) {
-                console.log('Creating hotel form with data:', hotel);
-                const id = ++hotelCounter;
+        files.forEach((file, idx) => {
+            const reader = new FileReader();
+            reader.onload = ev => {
                 const div = document.createElement('div');
-                div.className = 'border rounded p-3 mb-3 hotel-form bg-light';
-                div.dataset.hotelId = id;
-
+                div.className = 'image-preview-item';
                 div.innerHTML = `
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h6 class="mb-0">Khách sạn #${id}</h6>
-                        <button type="button" class="btn btn-sm btn-outline-danger remove-hotel">
-                            <i class="fa fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="row g-2">
-                        <div class="col-md-4">
-                            <label class="form-label-xs">Tên khách sạn</label>
-                            <input type="text" class="form-control form-control-sm hotel-name" 
-                                value="${hotel.name || ''}" placeholder="Halong Plaza">
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label-xs">Đánh giá</label>
-                            <select class="form-select form-select-sm hotel-rating">
-                                <option value="">--</option>
-                                <option value="1" ${hotel.rating == 1 ? 'selected' : ''}>1 sao</option>
-                                <option value="2" ${hotel.rating == 2 ? 'selected' : ''}>2 sao</option>
-                                <option value="3" ${hotel.rating == 3 ? 'selected' : ''}>3 sao</option>
-                                <option value="4" ${hotel.rating == 4 ? 'selected' : ''}>4 sao</option>
-                                <option value="5" ${hotel.rating == 5 ? 'selected' : ''}>5 sao</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label-xs">Ảnh khách sạn</label>
-                            <input type="file" class="form-control form-control-sm hotel-image" 
-                                accept="image/*" data-hotel-id="${id}">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label-xs">Preview</label>
-                            <div class="hotel-image-preview border rounded d-flex align-items-center justify-content-center bg-light" 
-                                style="height:32px;">
-                                ${hotel.image ? `<img src="${hotel.image}" class="h-100" style="object-fit:cover;">` : '<small class="text-muted">Chưa có ảnh</small>'}
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label-xs">Giá phòng đơn (VNĐ)</label>
-                            <input type="number" class="form-control form-control-sm hotel-single-price" 
-                                value="${hotel.rooms?.single || ''}" placeholder="800000">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label-xs">Giá phòng đôi (VNĐ)</label>
-                            <input type="number" class="form-control form-control-sm hotel-double-price" 
-                                value="${hotel.rooms?.double || ''}" placeholder="1200000">
-                        </div>
-                    </div>
+                    <img src="${ev.target.result}" alt="Preview">
+                    ${idx === 0 ? '<span class="cover-badge">Ảnh bìa</span>' : ''}
                 `;
+                imagePreviewGrid.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
 
-                return div;
+    if (existingItinerary.length > 0) {
+        const itineraryLines = existingItinerary.map(item =>
+            `Ngày ${item.day}: ${item.activity}`
+        ).join('\n');
+        if (itineraryText) itineraryText.value = itineraryLines;
+    }
+
+    function initializeHotelsSection() {
+        const slots = hotelsFixed?.querySelectorAll('.hotel-card');
+        if (!slots) return;
+
+        const seed = Array.isArray(existingHotels) ? existingHotels.slice(0, 2) : [];
+        slots.forEach((slotEl, idx) => {
+            const data = seed[idx];
+            const nameInput = slotEl.querySelector('.hotel-name');
+            const ratingSelect = slotEl.querySelector('.hotel-rating');
+            const singlePrice = slotEl.querySelector('.hotel-single-price');
+            const doublePrice = slotEl.querySelector('.hotel-double-price');
+            const preview = slotEl.querySelector('.hotel-image-preview');
+
+            if (data && data.name) {
+                nameInput.value = data.name || '';
+                if (data.rating) ratingSelect.value = String(data.rating);
+                if (data.rooms?.single) singlePrice.value = data.rooms.single;
+                if (data.rooms?.double) doublePrice.value = data.rooms.double;
+                if (data.image) {
+                    preview.innerHTML = `<img src="${data.image}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;">`;
+                }
             }
+        });
+    }
 
-            // Thêm khách sạn - sử dụng event delegation
-            document.addEventListener('click', (e) => {
-                if (e.target.id === 'addHotelBtn' || e.target.closest('#addHotelBtn')) {
+    // <CHANGE> Updated hotel image preview with modern styling
+    document.addEventListener('change', (e) => {
+        if (e.target.classList.contains('hotel-image')) {
+            const file = e.target.files[0];
+            const preview = e.target.previousElementSibling;
+
+            if (file && preview) {
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    preview.innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    });
+
+    const form = document.querySelector('form');
+    form.addEventListener('submit', (e) => {
+        const itineraryTextArea = document.getElementById('itineraryText');
+        if (itineraryTextArea && itineraryTextArea.value.trim()) {
+            const lines = itineraryTextArea.value.trim().split('\n').filter(line => line.trim());
+            const itinerary = lines.map((line, idx) => ({
+                day: idx + 1,
+                activity: line.trim()
+            }));
+            itineraryInput.value = JSON.stringify(itinerary);
+        } else {
+            itineraryInput.value = '';
+        }
+
+        const slots = document.querySelectorAll('#hotelsFixed .hotel-card');
+        const hotels = [];
+        slots.forEach(slot => {
+            const name = slot.querySelector('.hotel-name').value.trim();
+            const rating = parseInt(slot.querySelector('.hotel-rating').value) || null;
+            const singlePrice = parseInt(slot.querySelector('.hotel-single-price').value) || null;
+            const doublePrice = parseInt(slot.querySelector('.hotel-double-price').value) || null;
+            if (!name) return;
+            const hotel = { name, rating, rooms: {} };
+            if (singlePrice) hotel.rooms.single = singlePrice;
+            if (doublePrice) hotel.rooms.double = doublePrice;
+            hotels.push(hotel);
+        });
+
+        if (hotels.length !== 2) {
+            hotelsInput.value = '';
+            alert('Vui lòng nhập đầy đủ thông tin cho 2 khách sạn.');
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+        hotelsInput.value = JSON.stringify(hotels);
+    });
+
+    (function() {
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(f => {
+            f.addEventListener('submit', e => {
+                if (!f.checkValidity()) {
                     e.preventDefault();
-                    console.log('Add hotel button clicked');
-                    const container = document.getElementById('hotelsContainer');
-                    if (container) {
-                        const hotelForm = createHotelForm();
-                        container.appendChild(hotelForm);
-                    }
+                    e.stopPropagation();
                 }
-            });
-
-            // Xóa khách sạn - sử dụng event delegation
-            document.addEventListener('click', (e) => {
-                if (e.target.closest('.remove-hotel')) {
-                    e.preventDefault();
-                    console.log('Remove hotel button clicked');
-                    e.target.closest('.hotel-form').remove();
-                }
-            });
-
-            // Xử lý upload ảnh khách sạn - sử dụng event delegation
-            document.addEventListener('change', (e) => {
-                if (e.target.classList.contains('hotel-image')) {
-                    const file = e.target.files[0];
-                    const preview = e.target.closest('.hotel-form').querySelector('.hotel-image-preview');
-
-                    if (file && preview) {
-                        const reader = new FileReader();
-                        reader.onload = ev => {
-                            preview.innerHTML =
-                                `<img src="${ev.target.result}" class="h-100 w-100" style="object-fit:cover;">`;
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                }
-            });
-
-
-            // Before submit: serialize data into hidden inputs
-            const form = document.querySelector('form');
-            form.addEventListener('submit', () => {
-                // Xử lý lịch trình từ textarea
-                const itineraryTextArea = document.getElementById('itineraryText');
-                if (itineraryTextArea && itineraryTextArea.value.trim()) {
-                    const lines = itineraryTextArea.value.trim().split('\n').filter(line => line.trim());
-                    const itinerary = lines.map((line, idx) => ({
-                        day: idx + 1,
-                        activity: line.trim()
-                    }));
-                    itineraryInput.value = JSON.stringify(itinerary);
-                } else {
-                    itineraryInput.value = '';
-                }
-
-                // Xử lý khách sạn từ các form
-                const hotelForms = document.querySelectorAll('.hotel-form');
-                const hotels = [];
-
-                hotelForms.forEach(form => {
-                    const name = form.querySelector('.hotel-name').value.trim();
-                    const rating = parseInt(form.querySelector('.hotel-rating').value) || null;
-                    const singlePrice = parseInt(form.querySelector('.hotel-single-price').value) || null;
-                    const doublePrice = parseInt(form.querySelector('.hotel-double-price').value) || null;
-
-                    if (name) {
-                        const hotel = {
-                            name: name,
-                            rating: rating,
-                            image: `assets/images/hotels/${name.toLowerCase().replace(/\s+/g, '-')}.jpg`,
-                            rooms: {}
-                        };
-
-                        if (singlePrice) hotel.rooms.single = singlePrice;
-                        if (doublePrice) hotel.rooms.double = doublePrice;
-
-                        hotels.push(hotel);
-                    }
-                });
-
-                hotelsInput.value = hotels.length ? JSON.stringify(hotels) : '';
-            });
-
-            // Simple Bootstrap validation
-            (function() {
-                const forms = document.querySelectorAll('.needs-validation');
-                Array.from(forms).forEach(f => {
-                    f.addEventListener('submit', e => {
-                        if (!f.checkValidity()) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                        }
-                        f.classList.add('was-validated');
-                    }, false);
-                });
-            })();
-        </script>
-        @push('styles')
-            <style>
-                .form-label-xs {
-                    font-size: 0.7rem;
-                    font-weight: 600;
-                    text-transform: uppercase;
-                    letter-spacing: 0.5px;
-                    margin-bottom: 0.25rem;
-                    color: #495057;
-                }
-
-                #singleScreenCard textarea {
-                    resize: vertical;
-                }
-
-                #galleryStrip {
-                    background: #f8f9fa !important;
-                }
-
-                #galleryStrip .border {
-                    transition: box-shadow 0.15s ease;
-                }
-
-                #galleryStrip .border:hover {
-                    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-                }
-
-                .hotel-form {
-                    background: #f8f9fa;
-                    transition: border-color 0.15s ease;
-                }
-
-                .hotel-form:hover {
-                    border-color: #0d6efd !important;
-                }
-
-                .hotel-image-preview img {
-                    border-radius: 2px;
-                }
-
-                /* Custom file input styling */
-                input[type="file"].btn {
-                    position: relative;
-                    overflow: hidden;
-                    cursor: pointer;
-                    border: 1px dashed #0d6efd;
-                    background: transparent;
-                    color: #0d6efd;
-                }
-
-                input[type="file"].btn::-webkit-file-upload-button {
-                    position: absolute;
-                    left: -9999px;
-                }
-
-                input[type="file"].btn::before {
-                    content: '📁 Chọn ảnh';
-                    display: inline-block;
-                    width: 100%;
-                    text-align: center;
-                }
-
-                @media (max-width: 767.98px) {
-                    .col-md-4 {
-                        margin-bottom: 1rem;
-                    }
-                }
-            </style>
-        @endpush
-    @endpush
+                f.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+@endpush
 @endsection

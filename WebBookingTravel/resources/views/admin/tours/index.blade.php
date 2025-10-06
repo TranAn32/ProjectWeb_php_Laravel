@@ -75,6 +75,16 @@
             font-size: 12px;
         }
 
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(13, 36, 55, 0.08);
+            border: 1px solid rgba(13, 36, 55, 0.06);
+            margin-bottom: 24px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
         .card-body .btn {
 
             align-items: center;
@@ -90,14 +100,20 @@
         <div class="card-body py-3">
             <form method="GET" action="" class="row g-2 align-items-end small">
                 <div style="padding-bottom: 12px;" class="col-sm-4 col-md-2 order-0">
-                    <button style=" font-weight: 600;" type="button"
-                        onclick="window.location='{{ route('admin.tours.create') }}'"
+                    <button style="width: 110px !important; font-weight: 600; font-size: 15px; padding: 12px 18px; border-radius: 10px;"
+                        type="button" onclick="window.location='{{ route('admin.tours.create') }}'"
                         class="btn btn-primary btn-sm w-50 d-flex align-items-center justify-content-center">
                         Thêm mới
                     </button>
                 </div>
                 <div class="col-sm-8 col-md-3 order-1">
-                    <input type="text" name="q" value="{{ request('q') }}" class="form-control form-control-sm"
+                    <input
+                        style=" border: 1.5px solid #e1e8ed;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+        background: white;
+        font-family: 'Inter', sans-serif;"
+                        type="text" name="q" value="{{ request('q') }}" class="form-control form-control-sm"
                         placeholder="Tìm tiêu đề...">
                 </div>
                 <div class="col-sm-4 col-md-2 order-2">
