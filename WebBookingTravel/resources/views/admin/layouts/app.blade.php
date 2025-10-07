@@ -308,9 +308,6 @@
                         <li><a class="@if (request()->routeIs('admin.bookings.*')) active @endif"
                                 href="{{ route('admin.bookings.index') }}"><i class="fa fa-ticket"></i>
                                 <span>Bookings</span></a></li>
-                        <li><a class="@if (request()->routeIs('admin.users.*')) active @endif"
-                                href="{{ route('admin.users.index') }}"><i class="fa fa-users"></i> <span>Người
-                                    dùng</span></a></li>
                     </ul>
                 </div>
             </nav>

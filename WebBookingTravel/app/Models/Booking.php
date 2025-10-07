@@ -2,34 +2,39 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Booking extends Model
 {
-    protected $table = 'Booking';
-    protected $primaryKey = 'bookingID';
+    use HasFactory;
+
+    protected $table = 'bookings';
+    protected $primaryKey = 'booking_id';
     public $timestamps = false;
 
     protected $fillable = [
-        'tourID',
-        'userID',
-        'bookingDate',
-        'departureDate',
-        'numAdults',
-        'numChildren',
-        'totalPrice',
+        'tour_id',
+        'user_id',
+        'booking_date',
+        'departure_date',
+        'num_adults',
+        'num_children',
+        'total_price',
         'status',
-        'paymentStatus',
-        'specialRequest',
+        'payment_status',
+        'special_request',
     ];
 
     public function tour()
     {
-        return $this->belongsTo(Tour::class, 'tourID', 'tourID');
+        return $this->belongsTo(Tour::class, 'tour_id', 'tourID');
     }
+
     public function user()
     {
-        return $this->belongsTo(User::class, 'userID', 'userID');
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
-    // Pruned relations to non-core tables
 }
+
+

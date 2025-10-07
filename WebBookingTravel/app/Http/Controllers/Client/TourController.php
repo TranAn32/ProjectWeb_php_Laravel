@@ -10,7 +10,8 @@ class TourController extends Controller
 {
     public function index()
     {
-        $query = Tour::with('category');
+        $query = Tour::with('category')
+            ->where('status', 'published'); // Chỉ hiển thị tour đã publish
         $activeDeparture = request('departure');
         $activeType = request('type'); // 'domestic' | 'international' | null
         $activeCategoryId = request('category');
@@ -41,7 +42,7 @@ class TourController extends Controller
             }
         }
         $tours = $query->orderByDesc('tourID')->paginate(12)->appends(request()->only('departure', 'type', 'q', 'category'));
-        $departures = Tour::query()->select('departurePoint')->whereNotNull('departurePoint')->distinct()->orderBy('departurePoint')->pluck('departurePoint');
+        $departures = Tour::query()->where('status', 'published')->select('departurePoint')->whereNotNull('departurePoint')->distinct()->orderBy('departurePoint')->pluck('departurePoint');
         $filterCategories = Category::query()->select('categoryID', 'categoryName')->orderBy('categoryName')->get();
         $data = [
             'tours' => $tours,
@@ -53,14 +54,17 @@ class TourController extends Controller
             'filterCategories' => $filterCategories,
         ];
         if (request()->ajax()) {
-            return view('client.tours_list_fragment', $data);
+            return view('client.tours.tours_list_fragment', $data);
         }
-        return view('client.tours', $data);
+        return view('client.tours.tours', $data);
     }
 
     public function show($id)
     {
-        $tour = Tour::with('category')->where('tourID', $id)->firstOrFail();
+        $tour = Tour::with('category')
+            ->where('tourID', $id)
+            ->where('status', 'published') // Chỉ cho phép xem tour đã publish
+            ->firstOrFail();
         return view('client.tour_show', compact('tour'));
     }
 
@@ -68,7 +72,8 @@ class TourController extends Controller
     {
         $category = Category::where('categoryID', $categoryId)->firstOrFail();
         $query = Tour::with('category')
-            ->where('categoryID', $category->categoryID);
+            ->where('categoryID', $category->categoryID)
+            ->where('status', 'published'); // Chỉ hiển thị tour đã publish
         $activeType = request('type');
         $activeDeparture = request('departure');
         $keyword = trim((string) request('q')) ?: null;
@@ -97,7 +102,7 @@ class TourController extends Controller
         $tours = $query->orderByDesc('tourID')
             ->paginate(12)
             ->appends(request()->only('type', 'q', 'departure'));
-        $departures = Tour::query()->select('departurePoint')->whereNotNull('departurePoint')->distinct()->orderBy('departurePoint')->pluck('departurePoint');
+        $departures = Tour::query()->where('status', 'published')->select('departurePoint')->whereNotNull('departurePoint')->distinct()->orderBy('departurePoint')->pluck('departurePoint');
         $filterCategories = Category::query()->select('categoryID', 'categoryName')->orderBy('categoryName')->get();
         $data = [
             'tours' => $tours,
@@ -108,9 +113,9 @@ class TourController extends Controller
             'filterCategories' => $filterCategories,
         ];
         if (request()->ajax()) {
-            return view('client.tours_list_fragment', $data);
+            return view('client.tours.tours_list_fragment', $data);
         }
-        return view('client.tours', $data);
+        return view('client.tours.tours', $data);
     }
 
     // Action filter by type removed (schema không còn cột tourType)

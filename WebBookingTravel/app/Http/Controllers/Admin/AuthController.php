@@ -24,7 +24,7 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        // Sử dụng service chung để validate credentials
+        // Sử dụng service 
         $result = AdminValidationService::validateAdminCredentials($data['email'], $data['password']);
 
         if (!$result['valid']) {

@@ -59,7 +59,7 @@
                     }
 
                     if (!$isDuplicate) {
-                    $gallery[] = $u;
+                        $gallery[] = $u;
                     }
                 }
             }
@@ -95,7 +95,7 @@
             }
 
             if (!$primaryExists) {
-            array_unshift($gallery, $primary);
+                array_unshift($gallery, $primary);
             }
         }
 
@@ -135,7 +135,7 @@
         $endDate = $tour->endDate ?? null;
     @endphp
 
-        <style>
+    <style>
         :root {
             --primary: #2563eb;
             --primary-dark: #1e40af;
@@ -184,25 +184,25 @@
             .tour-header {
                 grid-template-columns: 1.5fr 1fr;
             }
-            }
+        }
 
-            .hero-slideshow {
-                position: relative;
+        .hero-slideshow {
+            position: relative;
             border-radius: var(--radius);
-                overflow: hidden;
+            overflow: hidden;
             background: var(--gray-100);
             aspect-ratio: 16/10;
-            }
+        }
 
-            .hero-slide {
-                display: none;
+        .hero-slide {
+            display: none;
             width: 100%;
             height: 100%;
-            }
+        }
 
         .hero-slide.is-active {
-                display: block;
-            }
+            display: block;
+        }
 
         .hero-slide img {
             width: 100%;
@@ -210,10 +210,10 @@
             object-fit: cover;
         }
 
-            .slide-nav {
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
+        .slide-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
             background: rgba(255, 255, 255, 0.9);
             border: none;
             width: 40px;
@@ -230,13 +230,13 @@
         .slide-nav:hover {
             background: white;
             box-shadow: var(--shadow-lg);
-            }
+        }
 
-            .slide-nav.prev {
+        .slide-nav.prev {
             left: 0.3rem;
-            }
+        }
 
-            .slide-nav.next {
+        .slide-nav.next {
             right: 0.3rem;
         }
 
@@ -301,8 +301,8 @@
         }
 
         .badge {
-                display: inline-flex;
-                align-items: center;
+            display: inline-flex;
+            align-items: center;
             gap: 0.075rem;
             padding: 0.15rem 0.25rem;
             border-radius: 6px;
@@ -445,9 +445,9 @@
         .detail-value {
             color: var(--gray-900);
             
-            }
+        }
 
-            .itinerary-day {
+        .itinerary-day {
             padding: 0.45rem;
             background: var(--gray-50);
             border-radius: var(--radius);
@@ -545,8 +545,8 @@
             .tour-info-card {
                 position: static;
             }
-            }
-        </style>
+        }
+    </style>
 
     <div class="tour-detail-container">
         <a href="{{ url()->previous() ?: route('client.tours.index') }}" class="back-link">
@@ -556,21 +556,21 @@
 
         <div class="tour-header">
             <div class="hero-slideshow" data-autoplay="5000">
-                    @foreach ($gallery as $i => $u)
-                        @php
-                            $isAbsolute =
-                                is_string($u) &&
-                                (strpos($u, 'http://') === 0 ||
-                                    strpos($u, 'https://') === 0 ||
-                                    strpos($u, '//') === 0 ||
-                                    strpos($u, 'data:') === 0 ||
-                                    strpos($u, 'blob:') === 0);
+                @foreach ($gallery as $i => $u)
+                    @php
+                        $isAbsolute =
+                            is_string($u) &&
+                            (strpos($u, 'http://') === 0 ||
+                                strpos($u, 'https://') === 0 ||
+                                strpos($u, '//') === 0 ||
+                                strpos($u, 'data:') === 0 ||
+                                strpos($u, 'blob:') === 0);
                         $src = $isAbsolute ? $u : asset(ltrim(str_replace('\\', '/', (string) $u), '/'));
-                        @endphp
+                    @endphp
                     <div class="hero-slide {{ $i === 0 ? 'is-active' : '' }}">
                         <img src="{{ $src }}" alt="{{ $tour->title }}">
-                        </div>
-                    @endforeach
+                    </div>
+                @endforeach
 
                 {{-- Category badge in top-left corner --}}
                 @if ($tour->category && $tour->category->categoryName)
@@ -579,7 +579,7 @@
                     </div>
                 @endif
 
-                    @if (count($gallery) > 1)
+                @if (count($gallery) > 1)
                     <button type="button" class="slide-nav prev" aria-label="Previous">
                         <i class="far fa-chevron-left"></i>
                     </button>
@@ -587,13 +587,13 @@
                         <i class="far fa-chevron-right"></i>
                     </button>
                     <div class="slide-dots">
-                            @foreach ($gallery as $i => $u)
+                        @foreach ($gallery as $i => $u)
                             <button type="button" class="slide-dot indicator-item {{ $i === 0 ? 'is-active' : '' }}"
                                 data-index="{{ $i }}"></button>
-                            @endforeach
-                        </div>
-                    @endif
-                </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
 
             <div class="tour-info-card">
                 <h1 class="tour-title">{{ $tour->title }}</h1>
@@ -601,8 +601,8 @@
                 @if ($typeLabel)
                     <div class="tour-badges">
                         <span class="badge badge-secondary">{{ $typeLabel }}</span>
-            </div>
-                    @endif
+                    </div>
+                @endif
 
                 <div class="price-section">
                     @if (!is_null($adult))
@@ -636,7 +636,7 @@
 
                 </div>
 
-                 <a class="btn-book" href="{{ route('client.booking', ['tour' => $tour->tourID]) }}">
+                <a class="btn-book" href="{{ route('client.booking', ['tour' => $tour->tourID]) }}">
                     Đặt tour ngay
                 </a>
             </div>
@@ -651,19 +651,19 @@
 
         <div class="section">
             <div class="detail-grid">
-                    @if (!empty($tour->departurePoint))
+                @if (!empty($tour->departurePoint))
                     <div class="detail-item">
                         <div class="detail-label">Khởi hành</div>
                         <div class="detail-value">{{ $tour->departurePoint }}</div>
-                        </div>
-                    @endif
-                    @if (!empty($tour->pickupPoint))
+                    </div>
+                @endif
+                @if (!empty($tour->pickupPoint))
                     <div class="detail-item">
                         <div class="detail-label">Điểm đón</div>
                         <div class="detail-value">{{ $tour->pickupPoint }}</div>
-                        </div>
-                    @endif
-                    @if ($tour->category && $tour->category->categoryName)
+                    </div>
+                @endif
+                @if ($tour->category && $tour->category->categoryName)
                     <div class="detail-item">
                         <div class="detail-label">Danh mục</div>
                         <div class="detail-value">{{ $tour->category->categoryName }}</div>
@@ -675,31 +675,31 @@
 
         <div class="section">
             <h2 class="section-title">Lịch trình</h2>
-                @php
-                    $days = [];
-                    if (is_array($itineraryJson)) {
+            @php
+                $days = [];
+                if (is_array($itineraryJson)) {
                     // Check if it's direct array of days
     if (isset($itineraryJson[0]['day']) || isset($itineraryJson[0]['activity'])) {
         $days = $itineraryJson;
     } elseif (isset($itineraryJson['days']) && is_array($itineraryJson['days'])) {
-                            $days = $itineraryJson['days'];
+        $days = $itineraryJson['days'];
                     }
-                    }
-                @endphp
+                }
+            @endphp
 
-                @if (!empty($days))
-                        @foreach ($days as $idx => $day)
-                            @php
+            @if (!empty($days))
+                @foreach ($days as $idx => $day)
+                    @php
                         $dayNumber = $day['day'] ?? $idx + 1;
                         $activity = $day['activity'] ?? ($day['title'] ?? ($day['description'] ?? ''));
                         $details = $day['details'] ?? ($day['content'] ?? '');
-                            @endphp
-                            <div class="itinerary-day">
+                    @endphp
+                    <div class="itinerary-day">
                         <div class="day-header">
-                                    <div>
+                            <div>
                                 <div class="day-title">Ngày {{ $dayNumber }}</div>
-                                            </div>
-                                    </div>
+                            </div>
+                        </div>
 
                         @if ($activity)
                             <div class="day-description">
@@ -707,17 +707,17 @@
                                 @if ($details && $details !== $activity)
                                     <br><br>{{ $details }}
                                 @endif
-                                    </div>
-                                @endif
                             </div>
-                        @endforeach
-                @elseif(is_string($tour->itinerary) && trim($tour->itinerary) !== '')
+                        @endif
+                    </div>
+                @endforeach
+            @elseif(is_string($tour->itinerary) && trim($tour->itinerary) !== '')
                 <div class="day-description">{!! nl2br(e($tour->itinerary)) !!}</div>
-                @else
+            @else
                 <div class="day-description">Chưa có lịch trình chi tiết.</div>
-                @endif
-            </div>
+            @endif
         </div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

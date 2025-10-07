@@ -144,7 +144,7 @@
         <div class="row">
             <div class="col-lg-8 col-xl-9">
                 <div id="tours-list">
-                    @include('client.tours_list_fragment')
+                    @include('client.tours.tours_list_fragment')
                 </div>
             </div>
             <div class="col-lg-4 col-xl-3 mt-4 mt-lg-0">

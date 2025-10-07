@@ -3,78 +3,72 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
+use App\Models\Tour;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Tour;
-use App\Models\Booking;
 
 class BookingController extends Controller
 {
     public function index(Request $request)
     {
-        $tourId = $request->query('tour');
-        $tour = null;
-        if ($tourId) {
-            $tour = Tour::find($tourId);
-        }
-        $user = Auth::user();
-        return view('client.booking', compact('tour', 'user'));
+        $user = Auth::guard('web')->user();
+        $bookings = Booking::with('tour')
+            ->where('user_id', $user->user_id)
+            ->orderByDesc('booking_id')
+            ->paginate(10);
+        return view('client.booking.index', compact('bookings'));
+    }
+
+    public function create(Request $request)
+    {
+        $tourId = (int) $request->query('tour');
+        $tour = $tourId ? Tour::where('tourID', $tourId)->first() : null;
+        return view('client.booking.create', compact('tour'));
     }
 
     public function store(Request $request)
     {
+        $user = Auth::guard('web')->user();
+
         $validated = $request->validate([
-            'tourID' => 'required|integer|exists:Tour,tourID',
-            'departureDate' => 'required|date',
-            'numAdults' => 'required|integer|min:1',
-            'numChildren' => 'nullable|integer|min:0',
-            'specialRequest' => 'nullable|string|max:2000',
-            'selectedHotelName' => 'nullable|string|max:255',
-            'hotelSingleRooms' => 'nullable|integer|min:0',
-            'hotelDoubleRooms' => 'nullable|integer|min:0',
-            'hotelSinglePrice' => 'nullable|numeric|min:0',
-            'hotelDoublePrice' => 'nullable|numeric|min:0',
+            'tour_id' => ['required', 'integer', 'exists:tours,tourID'],
+            'departure_date' => ['required', 'date'],
+            'num_adults' => ['required', 'integer', 'min:1'],
+            'num_children' => ['nullable', 'integer', 'min:0'],
+            'special_request' => ['nullable', 'string'],
         ]);
 
-        $tour = Tour::findOrFail($validated['tourID']);
+        $tour = Tour::where('tourID', $validated['tour_id'])->firstOrFail();
 
-        $numAdults = (int) $validated['numAdults'];
-        $numChildren = (int) ($validated['numChildren'] ?? 0);
-
-        $adultPrice = $tour->priceAdult ?? 0;
-        $childPrice = $tour->priceChild ?? 0;
-
-        // Hotel: room counts (single/double)
-        $hotelName = $validated['selectedHotelName'] ?? null;
-        $singleRooms = (int)($validated['hotelSingleRooms'] ?? 0);
-        $doubleRooms = (int)($validated['hotelDoubleRooms'] ?? 0);
-        $singlePrice = (float)($validated['hotelSinglePrice'] ?? 0);
-        $doublePrice = (float)($validated['hotelDoublePrice'] ?? 0);
-        $tourSubtotal = $numAdults * $adultPrice + $numChildren * $childPrice;
-        $hotelSubtotal = $singleRooms * $singlePrice + $doubleRooms * $doublePrice;
-        $total = $tourSubtotal + $hotelSubtotal;
-
-        // Append selected hotel/room info to special request for visibility
-        $sr = $validated['specialRequest'] ?? '';
-        if ($hotelName && ($singleRooms || $doubleRooms)) {
-            $extra = "\n[Khách sạn] " . $hotelName . ' • Đơn: ' . $singleRooms . ' x ' . number_format($singlePrice, 0, ',', '.') . 'đ • Đôi: ' . $doubleRooms . ' x ' . number_format($doublePrice, 0, ',', '.') . 'đ • Tổng KS ' . number_format($hotelSubtotal, 0, ',', '.') . 'đ';
-            $sr = trim($sr . $extra);
+        $adultPrice = (float) ($tour->priceAdult ?? 0);
+        $childPrice = (float) ($tour->priceChild ?? 0);
+        if (empty($adultPrice) && is_string($tour->prices)) {
+            $p = json_decode($tour->prices, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($p)) {
+                $adultPrice = (float) ($p['adult'] ?? 0);
+                $childPrice = (float) ($p['child'] ?? 0);
+            }
         }
 
-        $booking = Booking::create([
-            'tourID' => $tour->tourID,
-            'userID' => Auth::id(),
-            'bookingDate' => now(),
-            'departureDate' => $validated['departureDate'],
-            'numAdults' => $numAdults,
-            'numChildren' => $numChildren,
-            'totalPrice' => $total,
-            'status' => 'Pending',
-            'paymentStatus' => 'Unpaid',
-            'specialRequest' => $sr ?: null,
+        $numAdults = (int) $validated['num_adults'];
+        $numChildren = (int) ($validated['num_children'] ?? 0);
+        $total = ($numAdults * $adultPrice) + ($numChildren * $childPrice);
+
+        Booking::create([
+            'tour_id' => $tour->tourID,
+            'user_id' => $user->user_id,
+            'departure_date' => $validated['departure_date'],
+            'num_adults' => $numAdults,
+            'num_children' => $numChildren,
+            'total_price' => $total,
+            'status' => 'pending',
+            'payment_status' => 'unpaid',
+            'special_request' => $validated['special_request'] ?? null,
         ]);
 
-        return redirect()->route('client.tours.show', ['id' => $tour->tourID])
-            ->with('success', 'Đặt tour thành công! Mã đơn: ' . $booking->bookingID);
+        return redirect()->route('client.bookings.index')->with('success', 'Đặt tour thành công');
     }
 }
+
+

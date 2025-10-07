@@ -85,7 +85,7 @@
                     <div class="tour-actions">
                         <a class="btn btn-sm btn-outline-primary"
                             href="{{ route('client.tours.show', $tour->tourID) }}">Xem chi tiết</a>
-                        <a class="btn btn-sm btn-primary" href="{{ route('client.booking') }}">Đặt tour</a>
+                        <a class="btn btn-sm btn-primary" href="{{ route('client.booking', ['tour' => $tour->tourID]) }}">Đặt tour</a>
                     </div>
                 </div>
             </div>
