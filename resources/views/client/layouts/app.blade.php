@@ -7,14 +7,14 @@
     <title>@yield('title', 'Khách hàng | TripGo')</title>
     <link rel="shortcut icon" href="{{ asset('assets/images/logos/favicon.png') }}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('assets/css/flaticon.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/fontawesome-5.14.0.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/magnific-popup.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/nice-select.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/aos.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/slick.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ secure_asset('assets/css/flaticon.min.css') }}">
+    <link rel="stylesheet" href="{{ secure_asset('assets/css/fontawesome-5.14.0.min.css') }}">
+    <link rel="stylesheet" href="{{ secure_asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ secure_asset('assets/css/magnific-popup.min.css') }}">
+    <link rel="stylesheet" href="{{ secure_asset('assets/css/nice-select.min.css') }}">
+    <link rel="stylesheet" href="{{ secure_asset('assets/css/aos.css') }}">
+    <link rel="stylesheet" href="{{ secure_asset('assets/css/slick.min.css') }}">
+    <link rel="stylesheet" href="{{ secure_asset('assets/css/style.css') }}">
     @stack('styles')
 </head>
 
