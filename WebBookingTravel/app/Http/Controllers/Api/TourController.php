@@ -37,11 +37,5 @@ class TourController extends Controller
         return response()->json($this->service->departurePoints());
     }
 
-    /**
-     * GET /api/v1/tours/pickup-points
-     */
-    public function pickupPoints()
-    {
-        return response()->json($this->service->pickupPoints());
-    }
+    // pickup points removed per product decision
 }

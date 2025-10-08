@@ -3,63 +3,46 @@
 @section('content')
     <div class="container py-4">
         <style>
-            .form-check-input.hotel-radio {
-                width: 1.2rem;
-                height: 1.2rem;
-                aspect-ratio: 1 / 1;
-                border-radius: 50% !important;
-                appearance: auto;
-                -webkit-appearance: radio;
-                -moz-appearance: auto;
-                position: static;
-                inset: auto;
-                transform: none;
-                background: #fff;
-                border: 1px solid rgba(0, 0, 0, .25);
-                margin: 0;
-            }
-
-            /* Prevent theme overrides making the radio wrapper look like a pill */
-            .hotel-item .form-check {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 0 !important;
-                margin: 0 !important;
-                width: auto;
-                height: auto;
-                border: 0 !important;
-                background: transparent !important;
-                border-radius: 0 !important;
-            }
-
-            .hotel-item .form-check::before,
-            .hotel-item .form-check::after {
-                content: none !important;
-            }
-
-            .hotel-item {
-                transition: border-color .15s ease;
-            }
-
-            .hotel-item.selected {
-                border-color: var(--bs-primary) !important;
+            .form-control {
+                width: 100%;
+                padding: 12px 16px;
+                font-size: 15px;
+                border: 1.5px solid #e1e8ed;
+                border-radius: 10px;
+                transition: all 0.2s ease;
+                background: white;
+                font-family: 'Inter', sans-serif;
             }
 
             .qty-group {
                 width: 110px;
             }
+
+            .back-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 5px 10px;
+                background: white;
+                border: 1px solid #dee2e6;
+                border-radius: 6px;
+                color: #6c757d;
+                text-decoration: none;
+                font-size: 14px;
+
+            }
+
+            .back-link:hover {
+                color: #495057;
+                border-color: #adb5bd;
+            }
         </style>
         <div class="mb-3">
-            <a href="{{ url()->previous() ?: route('client.tours.index') }}" class="text-decoration-none small"><i
+            <a href="{{ url()->previous() ?: route('client.tours.index') }}" class="back-link"><i
                     class="far fa-arrow-left me-1"></i> Quay lại</a>
         </div>
 
         <h1 class="h4 mb-3">Đặt tour</h1>
-
-        @if (session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
-        @endif
 
         <div class="row g-4">
             <div class="col-lg-7">
@@ -77,10 +60,12 @@
                                                 $tour->image_path ?: asset('assets/images/destinations/dest1.jpg');
                                         @endphp
                                         <img src="{{ $imgSrc }}" alt="{{ $tour->title }}"
-                                            style="width:120px;height:90px;object-fit:cover;border-radius:.75rem;" />
+                                            style="width:120px;height:90px;object-fit:cover;border-radius:.75rem; " />
                                         <div>
-                                            <div class="fw-semibold fs-5">{{ $tour->title }}</div>
-                                            <div class="text-muted">Khởi hành: {{ $tour->departurePoint ?? '—' }}</div>
+                                            <div style="font-weight: 650; " class="fw-semibold fs-5">{{ $tour->title }}
+                                            </div>
+                                            <div style="margin-top: 20px;" class="text-muted">Khởi hành:
+                                                {{ $tour->departurePoint ?? '—' }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -116,7 +101,27 @@
                                 </div>
                             </div>
 
-                            <div class="mt-3" style="min-height: 200px;">
+                            <div class="row g-3 mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
+                                    <input type="tel" name="phone_number" class="form-control"
+                                        value="{{ old('phone_number', auth('web')->user()->phoneNumber ?? '') }}"
+                                        placeholder="Ví dụ: 0987654321" required />
+                                    @error('phone_number')
+                                        <div class="text-danger small">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Điểm đón <span class="text-danger">*</span></label>
+                                    <input type="text" name="pickup_point" class="form-control"
+                                        placeholder="Ví dụ: 123 Nguyễn Huệ, Q1, TP.HCM" required />
+                                    @error('pickup_point')
+                                        <div class="text-danger small">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
                                 <label class="form-label">Yêu cầu đặc biệt</label>
                                 <textarea name="special_request" class="form-control" rows="3" placeholder="Ví dụ: ăn chay, phòng gần cửa sổ...">{{ old('special_request') }}</textarea>
                                 @error('special_request')

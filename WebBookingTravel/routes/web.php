@@ -26,6 +26,7 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/bookings', [ClientBookingController::class, 'index'])->name('client.bookings.index');
     Route::get('/booking/create', [ClientBookingController::class, 'create'])->name('client.booking');
     Route::post('/booking', [ClientBookingController::class, 'store'])->name('client.booking.store');
+    Route::patch('/bookings/{id}/cancel', [ClientBookingController::class, 'cancel'])->name('client.bookings.cancel');
 });
 
 // Auth (client)
@@ -37,34 +38,7 @@ Route::middleware('guest:web')->group(function () {
 });
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:web')->name('logout');
 
-// -------------------------------------
-
-// Admin entry point - redirect tùy theo trạng thái đăng nhập
-// Route::get('/admin', function () {
-//     // Debug: Trả về text để xem logic
-//     if (Auth::guard('admin')->check()) {
-//         $user = Auth::guard('admin')->user();
-
-//         // Test xem AdminValidationService có hoạt động không
-//         try {
-//             $validation = AdminValidationService::validateAdminUser($user);
-
-//             if ($validation['valid']) {
-//                 // User hợp lệ -> redirect dashboard
-//                 return redirect('/admin/dashboard');
-//             } else {
-//                 // User không hợp lệ -> logout và redirect login
-//                 Auth::guard('admin')->logout();
-//                 return redirect('/admin/login')->with('error', $validation['message']);
-//             }
-//         } catch (\Exception $e) {
-//             return 'AdminValidationService error: ' . $e->getMessage();
-//         }
-//     }
-
-//     // Chưa đăng nhập -> redirect login
-//     return redirect('/admin/login');
-// })->name('admin.entry');
+// ----------------------------------------------------------------------------
 
 
 // Admin routes khác - khai báo trực tiếp không dùng prefix

@@ -152,6 +152,10 @@ class Tour extends Model
         'updated_at' => 'datetime',
         'startDate'  => 'date',
         'endDate'    => 'date',
+        'images'     => 'array',
+        'prices'     => 'array',
+        'itinerary'  => 'array',
+        'hotels'     => 'array',
     ];
 
     // Accessors for derived prices from JSON (fallback to legacy columns if present)

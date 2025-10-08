@@ -149,7 +149,7 @@
             margin-bottom: 16px;
         }
 
-        .form-input.is-invalid + .error-text {
+        .form-input.is-invalid+.error-text {
             display: block;
         }
 
@@ -167,56 +167,35 @@
 </head>
 
 <body>
+    {{-- Include Toast Notification Component --}}
+    @include('components.toast-notification')
+
     <div class="login-card">
- 
+
         <div class="login-header">
             <h1 class="login-title">Đăng nhập</h1>
             <p class="login-subtitle">Quản lý hệ thống TripGo Travel</p>
         </div>
 
-    
-        @if (session('error'))
-            <div class="alert-box">
-                <span>{{ session('error') }}</span>
-                <button type="button" class="alert-close" onclick="this.parentElement.remove()">×</button>
-            </div>
-        @endif
-        @if ($errors->any())
-            <div class="alert-box">
-                <span>{{ $errors->first() }}</span>
-                <button type="button" class="alert-close" onclick="this.parentElement.remove()">×</button>
-            </div>
-        @endif
-
-  
         <form method="POST" action="{{ route('admin.login.post') }}" novalidate>
             @csrf
 
             <div>
                 <label class="form-label">Email</label>
-                <input type="email" 
-                       name="email" 
-                       value="{{ old('email') }}" 
-                       class="form-input"
-                       placeholder="admin@tripgo.com" 
-                       required 
-                       autofocus>
+                <input type="email" name="email" value="{{ old('email') }}" class="form-input"
+                    placeholder="admin@tripgo.com" required autofocus>
                 <div class="error-text">Vui lòng nhập email hợp lệ</div>
             </div>
 
-         
+
             <div>
                 <label class="form-label">Mật khẩu</label>
-                <input type="password" 
-                       name="password" 
-                       class="form-input" 
-                       placeholder="Nhập mật khẩu"
-                       required 
-                       minlength="3">
+                <input type="password" name="password" class="form-input" placeholder="Nhập mật khẩu" required
+                    minlength="3">
                 <div class="error-text">Vui lòng nhập mật khẩu</div>
             </div>
 
-           
+
             <button type="submit" class="submit-btn">Đăng nhập</button>
         </form>
     </div>
@@ -225,7 +204,7 @@
     <script>
         (function() {
             const form = document.querySelector('form');
-            
+
             form.addEventListener('submit', function(e) {
                 const inputs = form.querySelectorAll('.form-input[required]');
                 let isValid = true;

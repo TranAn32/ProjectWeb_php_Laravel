@@ -444,7 +444,7 @@
 
         .detail-value {
             color: var(--gray-900);
-            
+
         }
 
         .itinerary-day {
@@ -463,7 +463,7 @@
 
         .day-title {
             font-size: 1.125rem;
-    
+
             color: var(--gray-900);
             margin-bottom: 0.15rem;
         }
@@ -527,6 +527,25 @@
             object-fit: cover;
             border-radius: 8px;
             border: 1px solid var(--gray-200);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 10px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            color: #6c757d;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .back-link:hover {
+            color: #495057;
+            border-color: #adb5bd;
         }
 
         @media (max-width: 767px) {

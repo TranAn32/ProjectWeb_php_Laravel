@@ -22,10 +22,10 @@ class User extends Authenticatable
     public $timestamps = true;
 
     protected $fillable = [
-        'userName',
+        'username',
         'email',
         'password',
-        'phoneNumber',
+        'phone_number',
         'address',
         'gender',
         'role',
@@ -58,6 +58,6 @@ class User extends Authenticatable
     // Back-compat accessors
     public function getNameAttribute()
     {
-        return $this->userName;
+        return $this->username;
     }
 }

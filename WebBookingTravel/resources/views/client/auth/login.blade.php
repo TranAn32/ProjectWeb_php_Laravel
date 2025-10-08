@@ -344,23 +344,19 @@
             <div class="auth-panel" data-aos="zoom-in" data-aos-duration="800">
                 <h2 class="panel-title">Chào mừng trở lại</h2>
                 <div class="panel-sub">Đăng nhập để tiếp tục hành trình khám phá.</div>
-                @if(session('auth_success'))
-                <div class="alert alert-success py-2 px-3 small mb-3">{{ session('auth_success') }}</div>
-                @endif
-                @if($errors->any())
-                <div class="alert alert-danger py-2 px-3 small mb-3">
-                    <ul class="m-0 ps-3 error-list">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
-                </div>
-                @endif
+
                 <form method="POST" action="{{ route('login.post') }}" novalidate>
                     @csrf
                     <div class="mb-3">
                         <label for="login" class="form-label">Email hoặc tên đăng nhập</label>
-                        <input type="text" class="form-control @error('login') is-invalid @enderror" id="login" name="login" value="{{ old('login') }}" required autofocus placeholder="nhập email hoặc userName">
+                        <input type="text" class="form-control @error('login') is-invalid @enderror" id="login"
+                            name="login" value="{{ old('login') }}" required autofocus
+                            placeholder="nhập email hoặc userName">
                     </div>
                     <div class="mb-2">
                         <label for="password" class="form-label">Mật khẩu</label>
-                        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required>
+                        <input type="password" class="form-control @error('password') is-invalid @enderror"
+                            id="password" name="password" required>
                     </div>
                     <div class="auth-actions">
                         <div class="form-check mb-0">

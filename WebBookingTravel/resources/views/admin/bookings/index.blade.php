@@ -130,18 +130,7 @@
                         <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
                     </select>
                 </div>
-                <div class="col-sm-4 col-md-2 order-3">
-                    <label class="form-label mb-1">Thanh toán</label>
-                    <select name="payment_status" class="form-select form-select-sm">
-                        <option value="">Tất cả</option>
-                        <option value="unpaid" {{ request('payment_status') == 'unpaid' ? 'selected' : '' }}>Chưa thanh toán
-                        </option>
-                        <option value="paid" {{ request('payment_status') == 'paid' ? 'selected' : '' }}>Đã thanh toán
-                        </option>
-                        <option value="refunded" {{ request('payment_status') == 'refunded' ? 'selected' : '' }}>Đã hoàn
-                            tiền</option>
-                    </select>
-                </div>
+                
                 <div class="col-sm-4 col-md-2 order-4">
                     <label class="form-label mb-1">Từ ngày</label>
                     <input type="date" name="from" value="{{ request('from') }}" class="form-control form-control-sm">
@@ -150,7 +139,7 @@
                     <label class="form-label mb-1">Đến ngày</label>
                     <input type="date" name="to" value="{{ request('to') }}" class="form-control form-control-sm">
                 </div>
-                <div class="col-sm-4 col-md-1 order-6">
+                <div class="col-sm-4 col-md-1 order-5">
                     <button class="btn btn-secondary btn-sm w-100"><i class="fa fa-filter me-1"></i> Lọc</button>
                 </div>
             </form>
@@ -166,12 +155,14 @@
                         <th style="width:90px;">Tour</th>
                         <th>Khách hàng</th>
                         <th style="width:120px;">Ngày đặt</th>
-                        <th style="width:120px;">Ngày khởi hành</th>
+                        <th style="width:120px;">Ngày đi</th>
                         <th style="width:100px;">Số người</th>
                         <th style="width:120px;">Tổng tiền</th>
+                        <th style="width:150px;">Điểm đón</th>
+                        <th style="width:120px;">Điện thoại</th>
                         <th style="width:120px;">Trạng thái</th>
                         {{-- <th style="width:100px;">Thanh toán</th> --}}
-                        <th style="width:140px;">Thao tác nhanh</th>
+                        <th style="width:140px;">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -237,12 +228,20 @@
                             <td class="text-nowrap">
                                 <div class="fw-semibold">{{ number_format($booking->total_price ?? 0) }} đ</div>
                             </td>
+                            <td style="max-width:150px;">
+                                <div class="small text-truncate" title="{{ $booking->pickup_point ?? '' }}">
+                                    {{ $booking->pickup_point ?? '-' }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="small">{{ $booking->phone_number ?? '-' }}</div>
+                            </td>
                             <td>
                                 @php($status = $booking->status ?? 'pending')
                                 <span class="status-badge status-{{ $status }}">
                                     @switch($status)
                                         @case('confirmed')
-                                            Đã xác nhận
+                                            xác nhận
                                         @break
 
                                         @case('cancelled')
@@ -250,7 +249,7 @@
                                         @break
 
                                         @default
-                                            Chờ xử lý
+                                            Đang chờ
                                     @endswitch
                                 </span>
                             </td>

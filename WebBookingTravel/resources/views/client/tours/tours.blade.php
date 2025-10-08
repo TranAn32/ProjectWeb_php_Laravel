@@ -138,6 +138,30 @@
         #filter-search-btn:active {
             transform: translateY(0);
         }
+
+        .form-control  {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 15px;
+            border: 1.5px solid #e1e8ed;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            background: white;
+            font-family: 'Inter', sans-serif;
+        }
+        .form-select{
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 15px;
+            border: 1.5px solid #e1e8ed;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            background: white;
+            font-family: 'Inter', sans-serif;
+            max-height: 45px;
+            line-height: 25px;
+            margin-bottom: 20px;
+        }
     </style>
 
     <div class="container pt-5 py-3">
@@ -169,17 +193,9 @@
                                 </select>
                             </div>
                         @endif
-                        <div class="mb-3">
-                            <label class="small text-muted">Loại tour</label>
-                            <select class="form-select" name="type">
-                                <option value="">-- Tất cả --</option>
-                                <option value="domestic" @selected(($activeType ?? '') === 'domestic')>Trong nước</option>
-                                <option value="international" @selected(($activeType ?? '') === 'international')>Nước ngoài</option>
-                            </select>
-                        </div>
                         <div class="mb-2">
-                            <label class="small text-muted">Điểm đến</label>
-                            <select class="form-select" name="departure">
+                            <label class="small text-muted ">Điểm đến</label>
+                            <select class="form-select " name="departure">
                                 <option value="">-- Tất cả --</option>
                                 @foreach ($departures ?? [] as $dep)
                                     <option value="{{ $dep }}" @selected(($activeDeparture ?? '') === $dep)>{{ $dep }}

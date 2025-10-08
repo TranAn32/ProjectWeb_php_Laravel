@@ -24,6 +24,8 @@ class Booking extends Model
         'status',
         'payment_status',
         'special_request',
+        'pickup_point',
+        'phone_number',
     ];
 
     public function tour()
@@ -36,5 +38,4 @@ class Booking extends Model
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 }
-
 

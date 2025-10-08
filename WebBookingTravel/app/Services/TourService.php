@@ -104,39 +104,5 @@ class TourService
         return $this->departurePoints($limit);
     }
 
-    /**
-     * Returns collection (flat) of pickup points.
-     */
-    public function pickupPoints(int $limit = 300): Collection
-    {
-        $query = Tour::query();
-        $table = (new Tour)->getTable();
-        $hasPickup = Schema::hasColumn($table, 'pickupPoint');
-
-        if ($hasPickup) {
-            $items = $query->whereNotNull('pickupPoint')
-                ->distinct()
-                ->orderBy('pickupPoint')
-                ->limit($limit)
-                ->pluck('pickupPoint')
-                ->values();
-        } else {
-            $items = collect();
-        }
-
-        if ($items->isEmpty()) { // derive from first word of titles
-            $raw = $query->select('title')->limit($limit)->pluck('title')->filter();
-            $items = $raw->map(function ($n) {
-                $parts = preg_split('/\s+/', trim($n));
-                return $parts[0] ?? $n;
-            })->unique()->values();
-        }
-
-        if ($items->isEmpty()) { // ultimate fallback for front-end debugging
-            $debug = $query->select('title')->limit(5)->pluck('title')->filter();
-            if ($debug->count()) $items = $debug->values();
-        }
-
-        return $items;
-    }
+    // pickup points removed per product decision
 }

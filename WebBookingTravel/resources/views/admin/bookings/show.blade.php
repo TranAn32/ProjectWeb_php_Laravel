@@ -1,20 +1,62 @@
 @extends('admin.layouts.app')
-@section('title', 'Chi tiết Booking #' . $booking->booking_id)
-@section('content')
-    <div class="container-fluid py-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 mb-0">Chi tiết Booking #{{ $booking->booking_id }}</h1>
-            <a href="{{ route('admin.bookings.index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-left me-1"></i> Quay lại
-            </a>
-        </div>
 
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
+@section('title', 'Bookings')
+@section('page_title', 'Bookings')
+@section('breadcrumbs')
+    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item active">Bookings</li>
+    <li class="breadcrumb-item active">Chi tiết Booking #{{ $booking->booking_id }}</li>
+@endsection
+<style>
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        color: #6c757d;
+        text-decoration: none;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .back-link:hover {
+        color: #495057;
+        border-color: #adb5bd;
+    }
+
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #f8f9fa;
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #495057;
+        min-width: 140px;
+    }
+
+    .info-value {
+        color: #212529;
+        text-align: right;
+        flex: 1;
+    }
+</style>
+@section('content')
+    <div class="container-fluid py-4" style="padding-top: 0 !important;">
+        <a href="{{ route('admin.bookings.index') }}" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            <span>Quay lại</span>
+        </a>
 
         <div class="row">
             <div class="col-md-8">
@@ -25,62 +67,71 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <h6>Thông tin cơ bản</h6>
-                                <table class="table table-sm">
-                                    <tr>
-                                        <td><strong>Mã Booking:</strong></td>
-                                        <td>#{{ $booking->booking_id }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Ngày đặt:</strong></td>
-                                        <td>{{ $booking->created_at ? $booking->created_at->format('d/m/Y H:i') : 'N/A' }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Ngày khởi hành:</strong></td>
-                                        <td>{{ \Carbon\Carbon::parse($booking->departure_date)->format('d/m/Y') }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Số người lớn:</strong></td>
-                                        <td>{{ $booking->num_adults }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Số trẻ em:</strong></td>
-                                        <td>{{ $booking->num_children }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Tổng tiền:</strong></td>
-                                        <td><strong
-                                                class="text-primary">{{ number_format($booking->total_price, 0, ',', '.') }}đ</strong>
-                                        </td>
-                                    </tr>
-                                </table>
+                                <h6 class="mb-3">Thông tin cơ bản</h6>
+                                <div class="info-list">
+                                    <div class="info-item">
+                                        <span class="info-label">Mã Booking:</span>
+                                        <span class="info-value">#{{ $booking->booking_id }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Ngày đặt:</span>
+                                        <span
+                                            class="info-value">{{ $booking->created_at ? $booking->created_at->format('d/m/Y H:i') : 'N/A' }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Ngày khởi hành:</span>
+                                        <span
+                                            class="info-value">{{ \Carbon\Carbon::parse($booking->departure_date)->format('d/m/Y') }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Số người lớn:</span>
+                                        <span class="info-value">{{ $booking->num_adults }} người</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Số trẻ em:</span>
+                                        <span class="info-value">{{ $booking->num_children }} trẻ</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Tổng tiền:</span>
+                                        <span
+                                            class="info-value text-success fw-bold">{{ number_format($booking->total_price, 0, ',', '.') }}đ</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Điểm đón:</span>
+                                        <span class="info-value">{{ $booking->pickup_point ?? 'Chưa có thông tin' }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Số điện thoại:</span>
+                                        <span class="info-value">{{ $booking->phone_number ?? 'Chưa có thông tin' }}</span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-6">
-                                <h6>Thông tin khách hàng</h6>
+                                <h6 class="mb-3">Thông tin khách hàng</h6>
                                 @if ($booking->user)
-                                    <table class="table table-sm">
-                                        <tr>
-                                            <td><strong>Tên:</strong></td>
-                                            <td>{{ $booking->user->userName ?? $booking->user->name }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Email:</strong></td>
-                                            <td>{{ $booking->user->email }}</td>
-                                        </tr>
+                                    <div class="info-list">
+                                        <div class="info-item">
+                                            <span class="info-label">Tên:</span>
+                                            <span
+                                                class="info-value">{{ $booking->user->userName ?? $booking->user->name }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Email:</span>
+                                            <span class="info-value">{{ $booking->user->email }}</span>
+                                        </div>
                                         @if ($booking->user->phoneNumber)
-                                            <tr>
-                                                <td><strong>Điện thoại:</strong></td>
-                                                <td>{{ $booking->user->phoneNumber }}</td>
-                                            </tr>
+                                            <div class="info-item">
+                                                <span class="info-label">Điện thoại (Profile):</span>
+                                                <span class="info-value">{{ $booking->user->phoneNumber }}</span>
+                                            </div>
                                         @endif
                                         @if ($booking->user->address)
-                                            <tr>
-                                                <td><strong>Địa chỉ:</strong></td>
-                                                <td>{{ $booking->user->address }}</td>
-                                            </tr>
+                                            <div class="info-item">
+                                                <span class="info-label">Địa chỉ:</span>
+                                                <span class="info-value">{{ $booking->user->address }}</span>
+                                            </div>
                                         @endif
-                                    </table>
+                                    </div>
                                 @else
                                     <p class="text-muted">Khách hàng đã bị xóa</p>
                                 @endif
@@ -88,8 +139,8 @@
                         </div>
 
                         @if ($booking->special_request)
-                            <div class="mt-3">
-                                <h6>Yêu cầu đặc biệt</h6>
+                            <div class="mt-4">
+                                <h6 class="mb-3">Yêu cầu đặc biệt</h6>
                                 <div class="alert alert-light">{{ $booking->special_request }}</div>
                             </div>
                         @endif
@@ -142,7 +193,8 @@
                             <div class="mb-3">
                                 <label class="form-label">Trạng thái hiện tại:</label>
                                 <select name="status" class="form-select">
-                                    <option value="pending" {{ $booking->status == 'pending' ? 'selected' : '' }}>Chờ xử lý
+                                    <option value="pending" {{ $booking->status == 'pending' ? 'selected' : '' }}>Chờ xử
+                                        lý
                                     </option>
                                     <option value="confirmed" {{ $booking->status == 'confirmed' ? 'selected' : '' }}>Đã
                                         xác nhận</option>

@@ -42,23 +42,10 @@
                                         <li class="{{ request()->routeIs('home') ? 'current' : '' }}"><a
                                                 href="{{ route('home') }}"><i class="fa fa-home"
                                                     aria-hidden="true"></i> Trang chủ</a></li>
-                                        <li
-                                            class="dropdown {{ request()->routeIs('client.tours.*') ? 'current' : '' }}">
-                                            <a href="{{ route('client.tours.index') }}" data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                                <i class="fa fa-suitcase" aria-hidden="true"></i> Tour du lịch <span
-                                                    class="caret"></span>
+                                        <li class="{{ request()->routeIs('client.tours.*') ? 'current' : '' }}">
+                                            <a href="{{ route('client.tours.index') }}">
+                                                <i class="fa fa-suitcase" aria-hidden="true"></i> Tour du lịch
                                             </a>
-                                            <ul class="dropdown-menu" style="min-width:200px;">
-                                                <li><a class="dropdown-item"
-                                                        href="{{ route('client.tours.index') }}">Tất cả tour</a></li>
-                                                <li><a class="dropdown-item"
-                                                        href="{{ route('client.tours.index') }}">Tour trong nước</a>
-                                                </li>
-                                                <li><a class="dropdown-item"
-                                                        href="{{ route('client.tours.index') }}">Tour nước ngoài</a>
-                                                </li>
-                                            </ul>
                                         </li>
                                         <li><a href="#about"><i class="fa fa-info-circle" aria-hidden="true"></i> Giới
                                                 thiệu</a></li>
@@ -139,6 +126,9 @@
         </header>
 
         <main class="content-wrapper" style="min-height:60vh;">
+            {{-- Include Toast Notification Component --}}
+            @include('components.toast-notification')
+
             @yield('content')
         </main>
 

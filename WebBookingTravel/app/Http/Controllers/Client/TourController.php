@@ -65,7 +65,7 @@ class TourController extends Controller
             ->where('tourID', $id)
             ->where('status', 'published') // Chỉ cho phép xem tour đã publish
             ->firstOrFail();
-        return view('client.tour_show', compact('tour'));
+        return view('client.tours.tour_show', compact('tour'));
     }
 
     public function category($categoryId)

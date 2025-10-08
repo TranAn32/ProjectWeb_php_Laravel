@@ -1,22 +1,58 @@
 @extends('client.layouts.app')
 @section('title', 'Tour đã đặt')
 @section('content')
-    <div class="container py-4">
+
+    <style>
+        .form-control,
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 15px;
+            border: 1.5px solid #e1e8ed;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            background: white;
+            font-family: 'Inter', sans-serif;
+            max-height: 45px;
+            line-height: 25px;
+            margin-bottom: 20px;
+        }
+    </style>
+    <div class="container py-4" style="min-height: 90vh"  >
         <h1 class="h4 mb-3">Tour đã đặt</h1>
 
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <!-- Bộ lọc trạng thái -->
+        <div class="card mb-4">
+            <div class="card-body py-3" style="max-height: 70px;">
+                <form method="GET" action="{{ route('client.bookings.index') }}" class="row g-3 align-items-center">
+                    <div class="col-auto" style="min-width: 200px !important;">
+                        <select name="status" id="status-filter" class="form-select form-select-sm"
+                            style="min-width: 250px !important;">
+                            <option value="">Tất cả</option>
+                            <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Chờ xử lý
+                            </option>
+                            <option value="confirmed" {{ request('status') === 'confirmed' ? 'selected' : '' }}>Đã xác nhận
+                            </option>
+                            <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>Đã hủy
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-auto" style="margin: 0 !important; ">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            Lọc
+                        </button>
+                    </div>
+                    @if (request('status'))
+                        <div class="col-auto" style="margin: 0 !important;">
+                            <a href="{{ route('client.bookings.index') }}" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-times me-1"></i>Xóa lọc
+                            </a>
+                        </div>
+                    @endif
+                </form>
             </div>
-        @endif
+        </div>
 
-        @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
 
         @forelse($bookings as $b)
             <div class="card mb-3 shadow-sm">
@@ -57,6 +93,12 @@
                                     <small><i class="far fa-users me-1"></i> {{ $b->num_adults }} người lớn,
                                         {{ $b->num_children }} trẻ em</small>
                                 </div>
+                                <div class="col-6">
+                                    <small><i class="fas fa-map-marker-alt me-1"></i> {{ $b->pickup_point }}</small>
+                                </div>
+                                <div class="col-6">
+                                    <small><i class="fas fa-phone me-1"></i> {{ $b->phone_number }}</small>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-3 text-md-end">
@@ -81,6 +123,18 @@
                                 @endphp
                                 <span class="badge {{ $statusClass }}">{{ $statusText }}</span>
                             </div>
+                            @if ($b->status === 'pending')
+                                <div class="mt-2">
+                                    <form action="{{ route('client.bookings.cancel', $b->booking_id) }}" method="POST"
+                                        onsubmit="return confirm('Bạn có chắc chắn muốn hủy đặt tour này không?')">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="fas fa-times me-1"></i>Hủy đặt
+                                        </button>
+                                    </form>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

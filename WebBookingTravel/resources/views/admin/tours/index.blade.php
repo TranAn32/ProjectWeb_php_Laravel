@@ -157,7 +157,6 @@
                         <th style="width:68px;">ID</th>
                         <th style="width:90px;">Ảnh</th>
                         <th>Tiêu đề</th>
-                        <th style="width:140px;" class="d-none d-lg-table-cell">Điểm đón</th>
                         <th style="width:140px;" class="d-none d-lg-table-cell">Điểm đến</th>
                         <th style="width:140px;">Giá</th>
                         <th style="width:120px;">Trạng thái</th>
@@ -196,9 +195,6 @@ $imgSrc = $t->image_path ?? asset('assets/images/destinations/dest1.jpg');
                                         </form>
                                     </div>
                                 </div>
-                            </td>
-                            <td class="d-none d-lg-table-cell">
-                                <span class="small">{{ $t->pickupPoint ?: '-' }}</span>
                             </td>
                             <td class="d-none d-lg-table-cell">
                                 <span class="small">{{ $t->departurePoint ?: '-' }}</span>

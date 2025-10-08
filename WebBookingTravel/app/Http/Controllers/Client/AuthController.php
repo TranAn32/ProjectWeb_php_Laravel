@@ -28,14 +28,14 @@ class AuthController extends Controller
             'remember' => 'nullable|boolean',
         ]);
 
-        $field = filter_var($data['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'userName';
+        $field = filter_var($data['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
         $user = User::query()->where($field, $data['login'])->first();
 
         // Kiểm tra trạng thái Active nếu có cột status
-        if ($user && Schema::hasColumn('Users', 'status')) {
+        if ($user && Schema::hasColumn('users', 'status')) {
             $status = (string)($user->status ?? '');
-            if (strcasecmp($status, 'Active') !== 0) {
+            if (strcasecmp($status, 'active') !== 0) {
                 return back()->withErrors(['login' => 'Tài khoản chưa được kích hoạt'])->onlyInput('login');
             }
         }
@@ -52,23 +52,23 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $data = $request->validate([
-            'userName' => 'required|string|min:3|max:50|unique:Users,userName',
-            'email' => 'required|email|max:100|unique:Users,email',
+            'username' => 'required|string|min:3|max:50|unique:users,username',
+            'email' => 'required|email|max:100|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
-            'phoneNumber' => 'nullable|string|max:30',
+            'phone_number' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
-            'gender' => 'nullable|in:Male,Female,Other',
+            'gender' => 'nullable|in:male,female,other',
         ]);
 
         $user = User::create([
-            'userName' => $data['userName'],
+            'username' => $data['username'],
             'email' => $data['email'],
             'password' => $data['password'],
-            'phoneNumber' => $data['phoneNumber'] ?? null,
+            'phone_number' => $data['phone_number'] ?? null,
             'address' => $data['address'] ?? null,
             'gender' => $data['gender'] ?? null,
             'role' => 'customer',
-            'status' => 'Active',
+            'status' => 'active',
         ]);
 
         Auth::guard('web')->login($user);

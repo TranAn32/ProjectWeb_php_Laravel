@@ -54,9 +54,6 @@
                             @if (!empty($tour->departurePoint))
                                 <span><i class="far fa-map-marker-alt me-1"></i> {{ $tour->departurePoint }}</span>
                             @endif
-                            @if (!empty($tour->pickupPoint))
-                                <span><i class="far fa-bus me-1"></i> {{ $tour->pickupPoint }}</span>
-                            @endif
                             @if (!empty($tour->days))
                                 <span><i class="far fa-clock me-1"></i> {{ $tour->days }} ngày</span>
                             @endif
