@@ -13,7 +13,7 @@
             @php
                 // Fallback phòng trường hợp controller không truyền
                 if (!isset($slides) || empty($slides)) {
-                    $heroImage = $heroImage ?? asset('assets/images/hero/hero.jpg');
+                    $heroImage = $heroImage ?? secure_asset('assets/images/hero/hero.jpg');
                     $slides = [$heroImage];
                 }
             @endphp
@@ -123,7 +123,7 @@
                         <div class="title-inline">
                             <h2>Khám phá các địa điểm du lịch cùng</h2>
                             <div class="logo"><a href="{{ route('home') }}"><img
-                                        src="{{ asset('assets/images/logos/logo.png') }}" alt="Logo"></a></div>
+                                        src="{{ secure_asset('assets/images/logos/logo.png') }}" alt="Logo"></a></div>
                         </div>
                         <p>Hơn <span class="count-text plus" data-speed="3000" data-stop="1200">0</span> trải nghiệm đáng
                             nhớ đang chờ bạn</p>
@@ -137,7 +137,7 @@
                         <div class="destination-item style-four" data-aos="zoom-in" data-aos-duration="600"
                             data-aos-delay="{{ $idx * 60 }}">
                             <div class="image">
-                                <img src="{{ $cat->imageURL ?: asset('assets/images/destinations/dest' . $images[$idx % 4] . '.jpg') }}"
+                                <img src="{{ $cat->imageURL ?: secure_asset('assets/images/destinations/dest' . $images[$idx % 4] . '.jpg') }}"
                                     alt="{{ $cat->categoryName }}" width="600" height="400" loading="lazy"
                                     style="width:100%;height:280px;">
                             </div>
@@ -189,7 +189,7 @@
                                     data-aos-duration="700" data-aos-delay="{{ $idx * 60 }}">
                                     <div class="image">
                                         <a href="{{ route('client.tours.show', ['id' => $tour->tourID]) }}">
-                                            <img src="{{ $tour->image_path ?: asset('assets/images/destinations/pop' . (($idx % 3) + 1) . '.jpg') }}"
+                                            <img src="{{ $tour->image_path ?: secure_asset('assets/images/destinations/pop' . (($idx % 3) + 1) . '.jpg') }}"
                                                 alt="{{ $tour->departurePoint }}" width="600" height="400"
                                                 loading="lazy" style="width:100%;height:auto;">
                                         </a>
@@ -230,7 +230,7 @@
                                                                     <div class="col-xxl-6 col-xl-8 col-lg-10">
                                                                         <div class="destination-item style-four" data-aos="fade-up" data-aos-duration="700" data-aos-delay="{{ $i * 80 }}">
                                                                             <div class="image">
-                                                                                <img src="{{ $h['image'] ?: asset('assets/images/hotels/vinpearl-halong.jpg') }}" width="200" height="360" loading="lazy" style="width:100%;height:230px;object-fit:cover;">
+                                                                                <img src="{{ $h['image'] ?: secure_asset('assets/images/hotels/vinpearl-halong.jpg') }}" width="200" height="360" loading="lazy" style="width:100%;height:230px;object-fit:cover;">
                                                                             </div>
                                                                             <div class="content p-4">
                                                                                 <h5 style="color: black;" class="mb-1">{{ $h['name'] }}</h5>
@@ -299,7 +299,7 @@
                 </div>
                 <div class="col-xl-7 col-lg-6" data-aos="fade-right" data-aos-duration="700">
                     <div class="about-us-image">
-                        <img src="{{ asset('assets/images/about/about.png') }}" alt="About">
+                        <img src="{{ secure_asset('assets/images/about/about.png') }}" alt="About">
                     </div>
                 </div>
             </div>
@@ -356,7 +356,7 @@
     <div class="col-xl-4 col-md-6">
                                                                         <div class="blog-item" data-aos="fade-up" data-aos-duration="700">
                                                                             <div class="image" style="height:200px;border-radius:10px;overflow:hidden;">
-                                                                                <img src="{{ asset('assets/images/blog/blog' . (($i % 3) + 1) . '.jpg') }}" alt="Bài viết {{ $i + 1 }}" style="width:100%;height:100%;object-fit:cover;">
+                                                                                <img src="{{ secure_asset('assets/images/blog/blog' . (($i % 3) + 1) . '.jpg') }}" alt="Bài viết {{ $i + 1 }}" style="width:100%;height:100%;object-fit:cover;">
                                                                             </div>
                                                                             <div class="content p-3">
                                                                                 <h5><a href="#">Bài viết {{ $i + 1 }}</a></h5>
@@ -1073,7 +1073,7 @@
     @endpush
 
     @push('scripts')
-        <script src="{{ asset('assets/js/slideshow.js') }}" defer></script>
+        <script src="{{ secure_asset('assets/js/slideshow.js') }}" defer></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const searchForm = document.getElementById('searchForm');

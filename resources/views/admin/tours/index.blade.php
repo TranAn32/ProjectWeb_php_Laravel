@@ -168,14 +168,14 @@
                     @forelse($tours as $t)
                         @php
                             // image_path accessor now rens absolute/asset()'d URL when possible
-$imgSrc = $t->image_path ?? asset('assets/images/destinations/dest1.jpg');
+$imgSrc = $t->image_path ?? secure_asset('assets/images/destinations/dest1.jpg');
                         @endphp
                         <tr>
                             <td class="text-muted small">#{{ $t->tourID }}</td>
                             <td>
                                 <img src="{{ $imgSrc }}" alt="{{ $t->title }}" loading="lazy"
                                     style="width:72px;height:54px;object-fit:cover;border-radius:6px;border:1px solid #e2e6ea;"
-                                    onerror="this.onerror=null;this.src='{{ asset('assets/images/destinations/dest1.jpg') }}';">
+                                    onerror="this.onerror=null;this.src='{{ secure_asset('assets/images/destinations/dest1.jpg') }}';">
                             </td>
                             <td class="tour-title-cell" style="max-width:320px;">
                                 <div class="tour-title-wrapper" title="{{ $t->title }}">

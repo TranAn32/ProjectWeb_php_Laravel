@@ -288,7 +288,7 @@
 
                 <div class="logo-outer">
                     <div class="logo"><a href="{{ route('admin.dashboard') }}"><img
-                                src="{{ asset('assets/images/logos/logo.png') }}" alt="Logo"></a></div>
+                                src="{{ secure_asset('assets/images/logos/logo.png') }}" alt="Logo"></a></div>
                 </div>
             </div>
             <nav class="flex-grow-1 mt-2">

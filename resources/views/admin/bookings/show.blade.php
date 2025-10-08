@@ -156,7 +156,7 @@
                     <div class="card-body">
                         @if ($booking->tour)
                             @php
-                                $imgSrc = $booking->tour->image_path ?: asset('assets/images/destinations/dest1.jpg');
+                            $imgSrc = $booking->tour->image_path ?: secure_asset('assets/images/destinations/dest1.jpg');
                             @endphp
                             <img src="{{ $imgSrc }}" alt="{{ $booking->tour->title }}"
                                 class="img-fluid rounded mb-3" style="width:100%;height:200px;object-fit:cover;">

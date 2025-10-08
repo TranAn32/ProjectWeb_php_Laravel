@@ -57,7 +57,7 @@
                                     <div class="d-flex gap-2 align-items-center">
                                         @php
                                             $imgSrc =
-                                                $tour->image_path ?: asset('assets/images/destinations/dest1.jpg');
+                                                $tour->image_path ?: secure_asset('assets/images/destinations/dest1.jpg');
                                         @endphp
                                         <img src="{{ $imgSrc }}" alt="{{ $tour->title }}"
                                             style="width:120px;height:90px;object-fit:cover;border-radius:.75rem; " />

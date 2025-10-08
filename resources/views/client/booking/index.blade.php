@@ -61,7 +61,7 @@
                         <div class="col-md-3">
                             @if ($b->tour)
                                 @php
-                                    $imgSrc = $b->tour->image_path ?: asset('assets/images/destinations/dest1.jpg');
+                                    $imgSrc = $b->tour->image_path ?: secure_asset('assets/images/destinations/dest1.jpg');
                                 @endphp
                                 <img src="{{ $imgSrc }}" alt="{{ $b->tour->title }}" class="img-fluid rounded"
                                     style="width:100%;height:120px;object-fit:cover;">

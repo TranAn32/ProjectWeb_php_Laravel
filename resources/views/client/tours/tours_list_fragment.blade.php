@@ -22,7 +22,7 @@
     <div class="row g-3">
         @foreach ($tours as $tour)
             @php
-                $imgSrc = $tour->image_path ?: asset('assets/images/destinations/dest1.jpg');
+                $imgSrc = $tour->image_path ?: secure_asset('assets/images/destinations/dest1.jpg');
                 $typeVal = $tour->type ?? ($tour->tourType ?? null);
                 $typeLabel = $typeVal
                     ? (strtolower(trim($typeVal)) === 'international'

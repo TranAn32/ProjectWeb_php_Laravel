@@ -65,7 +65,7 @@
             }
         }
 
-        $primary = $tour->image_path ?: asset('assets/images/destinations/dest1.jpg');
+        $primary = $tour->image_path ?: secure_asset('assets/images/destinations/dest1.jpg');
         if (!$gallery) {
             $gallery[] = $primary;
         } else {
