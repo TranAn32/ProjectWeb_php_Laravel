@@ -279,19 +279,19 @@
         </footer>
     </div>
 
-    <script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/jquery-3.6.0.min.js') }}"></script>
     <!-- Dùng Bootstrap Bundle để có Popper cho dropdown -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous">
     </script>
-    <script src="{{ asset('assets/js/appear.min.js') }}"></script>
-    <script src="{{ asset('assets/js/slick.min.js') }}"></script>
-    <script src="{{ asset('assets/js/jquery.magnific-popup.min.js') }}"></script>
-    <script src="{{ asset('assets/js/jquery.nice-select.min.js') }}"></script>
-    <script src="{{ asset('assets/js/imagesloaded.pkgd.min.js') }}"></script>
-    <script src="{{ asset('assets/js/skill.bars.jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/js/isotope.pkgd.min.js') }}"></script>
-    <script src="{{ asset('assets/js/aos.js') }}"></script>
-    <script src="{{ asset('assets/js/script.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/appear.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/slick.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/jquery.nice-select.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/imagesloaded.pkgd.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/skill.bars.jquery.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/isotope.pkgd.min.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/aos.js') }}"></script>
+    <script src="{{ secure_asset('assets/js/script.js') }}"></script>
     @stack('scripts')
 </body>
 
