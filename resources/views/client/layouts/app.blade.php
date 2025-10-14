@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{ secure_asset('assets/css/nice-select.min.css') }}">
     <link rel="stylesheet" href="{{ secure_asset('assets/css/aos.css') }}">
     <link rel="stylesheet" href="{{ secure_asset('assets/css/slick.min.css') }}">
-    <link rel="stylesheet" href="{{ secure_asset('assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     @stack('styles')
 </head>
 

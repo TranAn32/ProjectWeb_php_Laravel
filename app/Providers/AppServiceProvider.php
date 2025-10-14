@@ -25,10 +25,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Force HTTPS in production to avoid mixed-content when behind proxies (e.g., Railway)
-        // if (app()->environment('production')) {
-        //     URL::forceScheme('https'); 
-        // }
-        URL::forceScheme('https'); 
+        if (app()->environment('production')) {
+            dump("a");
+            URL::forceScheme('https'); 
+        }else{
+            dump("b");
+            URL::forceScheme('http');
+        }
 
         // Chia sẻ danh sách category cho mọi view (dùng cache đơn giản tránh query lặp lại)
         View::composer('*', function ($view) {

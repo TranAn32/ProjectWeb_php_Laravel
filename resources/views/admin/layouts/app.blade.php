@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <!-- Existing global admin css (if any) -->
     <link rel="stylesheet" href="{{ secure_asset('assets/css/style.css') }}">
+    
     <style>
         body {
             background-color: #f5f7fa;
