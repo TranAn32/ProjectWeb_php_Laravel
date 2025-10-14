@@ -15,8 +15,8 @@
     <!-- Bootstrap Icons (needed for .bi icon classes used in tours index) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <!-- Existing global admin css (if any) -->
-    <link rel="stylesheet" href="{{ secure_asset('assets/css/style.css') }}">
-    
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
     <style>
         body {
             background-color: #f5f7fa;
@@ -289,7 +289,7 @@
 
                 <div class="logo-outer">
                     <div class="logo"><a href="{{ route('admin.dashboard') }}"><img
-                                src="{{ secure_asset('assets/images/logos/logo.png') }}" alt="Logo"></a></div>
+                                src="{{ asset('assets/images/logos/logo.png') }}" alt="Logo"></a></div>
                 </div>
             </div>
             <nav class="flex-grow-1 mt-2">

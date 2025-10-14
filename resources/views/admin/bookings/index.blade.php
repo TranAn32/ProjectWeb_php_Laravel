@@ -130,7 +130,7 @@
                         <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
                     </select>
                 </div>
-                
+
                 <div class="col-sm-4 col-md-2 order-4">
                     <label class="form-label mb-1">Từ ngày</label>
                     <input type="date" name="from" value="{{ request('from') }}" class="form-control form-control-sm">
@@ -168,7 +168,7 @@
                 <tbody>
                     @forelse($bookings as $booking)
                         @php
-                            $imgSrc = $booking->tour->image_path ?? secure_asset('assets/images/destinations/dest1.jpg');
+                            $imgSrc = $booking->tour->image_path ?? asset('assets/images/destinations/dest1.jpg');
                         @endphp
                         <tr>
                             <td class="text-muted small">#{{ $booking->booking_id }}</td>
@@ -176,7 +176,7 @@
                                 @if ($booking->tour)
                                     <img src="{{ $imgSrc }}" alt="{{ $booking->tour->title ?? '' }}" loading="lazy"
                                         style="width:72px;height:54px;object-fit:cover;border-radius:6px;border:1px solid #e2e6ea;"
-                                        onerror="this.onerror=null;this.src='{{ secure_asset('assets/images/destinations/dest1.jpg') }}';">
+                                        onerror="this.onerror=null;this.src='{{ asset('assets/images/destinations/dest1.jpg') }}';">
                                 @else
                                     <div class="text-muted small">Không có ảnh</div>
                                 @endif

@@ -26,10 +26,8 @@ class AppServiceProvider extends ServiceProvider
     {
         // Force HTTPS in production to avoid mixed-content when behind proxies (e.g., Railway)
         if (app()->environment('production')) {
-            dump("a");
-            URL::forceScheme('https'); 
-        }else{
-            dump("b");
+            URL::forceScheme('https');
+        } else {
             URL::forceScheme('http');
         }
 

@@ -100,7 +100,8 @@
         <div class="card-body py-3">
             <form method="GET" action="" class="row g-2 align-items-end small">
                 <div style="padding-bottom: 12px;" class="col-sm-4 col-md-2 order-0">
-                    <button style="width: 110px !important; font-weight: 600; font-size: 15px; padding: 12px 18px; border-radius: 10px;"
+                    <button
+                        style="width: 110px !important; font-weight: 600; font-size: 15px; padding: 12px 18px; border-radius: 10px;"
                         type="button" onclick="window.location='{{ route('admin.tours.create') }}'"
                         class="btn btn-primary btn-sm w-50 d-flex align-items-center justify-content-center">
                         Thêm mới
@@ -168,14 +169,14 @@
                     @forelse($tours as $t)
                         @php
                             // image_path accessor now rens absolute/asset()'d URL when possible
-$imgSrc = $t->image_path ?? secure_asset('assets/images/destinations/dest1.jpg');
+$imgSrc = $t->image_path ?? asset('assets/images/destinations/dest1.jpg');
                         @endphp
                         <tr>
                             <td class="text-muted small">#{{ $t->tourID }}</td>
                             <td>
                                 <img src="{{ $imgSrc }}" alt="{{ $t->title }}" loading="lazy"
                                     style="width:72px;height:54px;object-fit:cover;border-radius:6px;border:1px solid #e2e6ea;"
-                                    onerror="this.onerror=null;this.src='{{ secure_asset('assets/images/destinations/dest1.jpg') }}';">
+                                    onerror="this.onerror=null;this.src='{{ asset('assets/images/destinations/dest1.jpg') }}';">
                             </td>
                             <td class="tour-title-cell" style="max-width:320px;">
                                 <div class="tour-title-wrapper" title="{{ $t->title }}">

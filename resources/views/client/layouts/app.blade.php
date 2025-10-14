@@ -5,15 +5,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@yield('title', 'Khách hàng | TripGo')</title>
-    <link rel="shortcut icon" href="{{ secure_asset('assets/images/logos/favicon.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('assets/images/logos/favicon.png') }}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ secure_asset('assets/css/flaticon.min.css') }}">
-    <link rel="stylesheet" href="{{ secure_asset('assets/css/fontawesome-5.14.0.min.css') }}">
-    <link rel="stylesheet" href="{{ secure_asset('assets/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ secure_asset('assets/css/magnific-popup.min.css') }}">
-    <link rel="stylesheet" href="{{ secure_asset('assets/css/nice-select.min.css') }}">
-    <link rel="stylesheet" href="{{ secure_asset('assets/css/aos.css') }}">
-    <link rel="stylesheet" href="{{ secure_asset('assets/css/slick.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/flaticon.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/fontawesome-5.14.0.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/magnific-popup.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/nice-select.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/aos.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/slick.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     @stack('styles')
 </head>
@@ -27,13 +27,13 @@
                     <div class="header-inner rel d-flex align-items-center">
                         <div class="logo-outer">
                             <div class="logo"><a href="{{ route('home') }}"><img
-                                        src="{{ secure_asset('assets/images/logos/logo.png') }}" alt="Logo"></a></div>
+                                        src="{{ asset('assets/images/logos/logo.png') }}" alt="Logo"></a></div>
                         </div>
                         <div class="nav-outer mx-lg-auto ps-xxl-5 clearfix">
                             <nav class="main-menu navbar-expand-lg">
                                 <div class="navbar-header">
                                     <div class="mobile-logo"><a href="{{ route('home') }}"><img
-                                                src="{{ secure_asset('assets/images/logos/logo.png') }}" alt="Logo"></a>
+                                                src="{{ asset('assets/images/logos/logo.png') }}" alt="Logo"></a>
                                     </div>
 
                                 </div>
@@ -134,7 +134,7 @@
 
         <!-- Footer embedded -->
         <footer class="main-footer bgs-cover overlay rel z-1 pb-25"
-            style="background-image: url('{{ secure_asset('assets/images/backgrounds/footer.jpg') }}');">
+            style="background-image: url('{{ asset('assets/images/backgrounds/footer.jpg') }}');">
             <div class="container">
                 <div class="footer-top pt-100 pb-30">
                     <div class="row justify-content-between">
@@ -142,7 +142,8 @@
                             data-aos-offset="50">
                             <div class="footer-widget footer-text">
                                 <div class="footer-logo mb-25">
-                                    <a href="index.html"><img src="{{ secure_asset('assets/images/logos/logo.png') }}" alt="Logo"></a>
+                                    <a href="index.html"><img src="{{ asset('assets/images/logos/logo.png') }}"
+                                            alt="Logo"></a>
                                 </div>
                                 <p>Chúng tôi xây dựng các hành trình riêng theo sở thích của bạn, đảm bảo mỗi chuyến đi
                                     đều liền mạch và giàu trải nghiệm, khám phá những điểm đến độc đáo.</p>
@@ -273,25 +274,25 @@
      </div> -->
                     <!-- Scroll Top Button -->
                     <button class="scroll-top scroll-to-target" data-target="html"><img
-                            src="{{ secure_asset('assets/images/icons/scroll-up.png') }}" alt="Lên đầu trang"></button>
+                            src="{{ asset('assets/images/icons/scroll-up.png') }}" alt="Lên đầu trang"></button>
                 </div>
             </div>
         </footer>
     </div>
 
-    <script src="{{ secure_asset('assets/js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
     <!-- Dùng Bootstrap Bundle để có Popper cho dropdown -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous">
     </script>
-    <script src="{{ secure_asset('assets/js/appear.min.js') }}"></script>
-    <script src="{{ secure_asset('assets/js/slick.min.js') }}"></script>
-    <script src="{{ secure_asset('assets/js/jquery.magnific-popup.min.js') }}"></script>
-    <script src="{{ secure_asset('assets/js/jquery.nice-select.min.js') }}"></script>
-    <script src="{{ secure_asset('assets/js/imagesloaded.pkgd.min.js') }}"></script>
-    <script src="{{ secure_asset('assets/js/skill.bars.jquery.min.js') }}"></script>
-    <script src="{{ secure_asset('assets/js/isotope.pkgd.min.js') }}"></script>
-    <script src="{{ secure_asset('assets/js/aos.js') }}"></script>
-    <script src="{{ secure_asset('assets/js/script.js') }}"></script>
+    <script src="{{ asset('assets/js/appear.min.js') }}"></script>
+    <script src="{{ asset('assets/js/slick.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.nice-select.min.js') }}"></script>
+    <script src="{{ asset('assets/js/imagesloaded.pkgd.min.js') }}"></script>
+    <script src="{{ asset('assets/js/skill.bars.jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/js/isotope.pkgd.min.js') }}"></script>
+    <script src="{{ asset('assets/js/aos.js') }}"></script>
+    <script src="{{ asset('assets/js/script.js') }}"></script>
     @stack('scripts')
 </body>
 

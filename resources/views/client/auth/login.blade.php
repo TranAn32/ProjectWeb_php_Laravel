@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Đăng nhập | TripGo</title>
-    <link rel="shortcut icon" href="{{ secure_asset('assets/images/logos/favicon.png') }}" type="image/x-icon">
-    <link rel="stylesheet" href="{{ secure_asset('assets/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ secure_asset('assets/css/fontawesome-5.14.0.min.css') }}">
-    <link rel="stylesheet" href="{{ secure_asset('assets/css/aos.css') }}">
-    <link rel="stylesheet" href="{{ secure_asset('assets/css/style.css') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/images/logos/favicon.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/fontawesome-5.14.0.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/aos.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <style>
         body {
             min-height: 100vh;
@@ -338,7 +338,7 @@
         <div class="auth-left">
             <div class="brand-inline mb-4" data-aos="fade-right" data-aos-duration="800">
                 <a href="{{ route('home') }}" class="d-inline-flex align-items-center text-decoration-none">
-                    <img src="{{ secure_asset('assets/images/logos/logo.png') }}" alt="TripGo">
+                    <img src="{{ asset('assets/images/logos/logo.png') }}" alt="TripGo">
                 </a>
             </div>
             <div class="auth-panel" data-aos="zoom-in" data-aos-duration="800">
@@ -385,9 +385,9 @@
             </div>
         </div>
     </div>
-    <script src="{{ secure_asset('assets/js/jquery-3.6.0.min.js') }}"></script>
-    <script src="{{ secure_asset('assets/js/bootstrap.min.js') }}"></script>
-    <script src="{{ secure_asset('assets/js/aos.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('assets/js/aos.js') }}"></script>
     <script>
         AOS.init({
             once: true,
