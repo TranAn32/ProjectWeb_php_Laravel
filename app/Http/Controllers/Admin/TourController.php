@@ -27,6 +27,10 @@ class TourController extends Controller
 
     public function store(Request $request)
     {
+        // Normalize: map destinationPoint (if posted) into departurePoint, since DB uses departurePoint for destination
+        if ($request->filled('destinationPoint') && !$request->filled('departurePoint')) {
+            $request->merge(['departurePoint' => $request->input('destinationPoint')]);
+        }
         // Debug (safe logging – context must be array)
         Log::info('Store request received', ['keys' => array_keys($request->all())]);
         $hasImages = $request->hasFile('images');
@@ -41,7 +45,6 @@ class TourController extends Controller
             'title' => ['required', 'string', 'max:200'],
             'description' => ['nullable', 'string'],
             'categoryID' => ['nullable', 'integer', 'exists:categories,categoryID'],
-            'pickupPoint' => ['nullable', 'string', 'max:255'],
             'departurePoint' => ['nullable', 'string', 'max:255'],
             'status' => ['nullable', 'in:draft,published,canceled'],
             'images' => ['nullable', 'array'],
@@ -131,14 +134,12 @@ class TourController extends Controller
         if (Schema::hasColumn($table, 'categoryID')) {
             $tourData['categoryID'] = $validatedData['categoryID'] ?? null;
         }
-        if (Schema::hasColumn($table, 'pickupPoint')) {
-            $tourData['pickupPoint'] = $validatedData['pickupPoint'] ?? null;
-        }
         if (Schema::hasColumn($table, 'departurePoint')) {
             $tourData['departurePoint'] = $validatedData['departurePoint'] ?? null;
         }
+        // If schema happens to have destinationPoint as well, keep it in sync
         if (Schema::hasColumn($table, 'destinationPoint')) {
-            $tourData['destinationPoint'] = $validatedData['destinationPoint'] ?? null;
+            $tourData['destinationPoint'] = $validatedData['departurePoint'] ?? null;
         }
 
         // Handle prices JSON
@@ -205,14 +206,17 @@ class TourController extends Controller
 
             Log::info('Starting validation...');
 
+            // Normalize: map destinationPoint into departurePoint for backward forms
+            if ($request->filled('destinationPoint') && !$request->filled('departurePoint')) {
+                $request->merge(['departurePoint' => $request->input('destinationPoint')]);
+            }
+
             // Validate base fields including new image management fields
             $validated = $request->validate([
                 'title' => ['required', 'string', 'max:255'],
                 'description' => ['nullable', 'string'],
                 'categoryID' => ['nullable', 'integer', 'exists:categories,categoryID'],
                 'departurePoint' => ['nullable', 'string', 'max:255'],
-                'destinationPoint' => ['nullable', 'string', 'max:255'],
-                'pickupPoint' => ['nullable', 'string', 'max:255'],
                 'status' => ['nullable', 'in:draft,published,canceled'],
                 'priceAdult' => ['nullable', 'numeric', 'min:0'],
                 'priceChild' => ['nullable', 'numeric', 'min:0'],
@@ -238,14 +242,11 @@ class TourController extends Controller
             if (Schema::hasColumn($table, 'categoryID')) {
                 $updateData['categoryID'] = $validated['categoryID'] ?? $tour->categoryID;
             }
-            if (Schema::hasColumn($table, 'pickupPoint')) {
-                $updateData['pickupPoint'] = $validated['pickupPoint'] ?? $tour->pickupPoint;
-            }
             if (Schema::hasColumn($table, 'departurePoint')) {
                 $updateData['departurePoint'] = $validated['departurePoint'] ?? $tour->departurePoint;
             }
             if (Schema::hasColumn($table, 'destinationPoint')) {
-                $updateData['destinationPoint'] = $validated['destinationPoint'] ?? $tour->destinationPoint;
+                $updateData['destinationPoint'] = $validated['departurePoint'] ?? $tour->destinationPoint;
             }
 
             // Prices JSON

@@ -6,9 +6,11 @@ use App\Http\Controllers\Client\TourController as ClientTourController;
 use App\Http\Controllers\Client\BookingController as ClientBookingController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\TourController as AdminTourController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Client\AuthController;
+use App\Http\Middleware\CheckAdmin;
 use Illuminate\Support\Facades\Auth;
 use App\Services\AdminValidationService;
 
@@ -22,6 +24,7 @@ Route::get('/category/{category}', [ClientTourController::class, 'category'])->n
 Route::middleware(['auth:web'])->group(function () {
     Route::get('/booking', [ClientTourController::class, 'index']); // keep legacy access to list via /booking
 });
+
 Route::middleware(['auth:web'])->group(function () {
     Route::get('/bookings', [ClientBookingController::class, 'index'])->name('client.bookings.index');
     Route::get('/booking/create', [ClientBookingController::class, 'create'])->name('client.booking');
@@ -46,21 +49,31 @@ Route::get('/admin/login', [AdminAuthController::class, 'showLogin'])->name('adm
 Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.post')
     ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
-Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+Route::middleware([CheckAdmin::class])->group(function () {
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
-// Tours management
-Route::get('/admin/tours', [AdminTourController::class, 'index'])->name('admin.tours.index');
-Route::get('/admin/tours/create', [AdminTourController::class, 'create'])->name('admin.tours.create');
-Route::post('/admin/tours', [AdminTourController::class, 'store'])->name('admin.tours.store');
-Route::get('/admin/tours/{id}/edit', [AdminTourController::class, 'edit'])->name('admin.tours.edit');
-Route::put('/admin/tours/{id}', [AdminTourController::class, 'update'])->name('admin.tours.update');
-Route::delete('/admin/tours/{id}', [AdminTourController::class, 'destroy'])->name('admin.tours.destroy');
+    // Tours management
+    Route::get('/admin/tours', [AdminTourController::class, 'index'])->name('admin.tours.index');
+    Route::get('/admin/tours/create', [AdminTourController::class, 'create'])->name('admin.tours.create');
+    Route::post('/admin/tours', [AdminTourController::class, 'store'])->name('admin.tours.store');
+    Route::get('/admin/tours/{id}/edit', [AdminTourController::class, 'edit'])->name('admin.tours.edit');
+    Route::put('/admin/tours/{id}', [AdminTourController::class, 'update'])->name('admin.tours.update');
+    Route::delete('/admin/tours/{id}', [AdminTourController::class, 'destroy'])->name('admin.tours.destroy');
 
-// Bookings management
-Route::get('/admin/bookings', [AdminBookingController::class, 'index'])->name('admin.bookings.index');
-Route::get('/admin/bookings/{id}', [AdminBookingController::class, 'show'])->name('admin.bookings.show');
-Route::patch('/admin/bookings/{id}/status', [AdminBookingController::class, 'updateStatus'])->name('admin.bookings.updateStatus');
-Route::delete('/admin/bookings/{id}', [AdminBookingController::class, 'destroy'])->name('admin.bookings.destroy');
+    // Categories management
+    Route::get('/admin/categories', [AdminCategoryController::class, 'index'])->name('admin.categories.index');
+    Route::get('/admin/categories/create', [AdminCategoryController::class, 'create'])->name('admin.categories.create');
+    Route::post('/admin/categories', [AdminCategoryController::class, 'store'])->name('admin.categories.store');
+    Route::get('/admin/categories/{id}/edit', [AdminCategoryController::class, 'edit'])->name('admin.categories.edit');
+    Route::put('/admin/categories/{id}', [AdminCategoryController::class, 'update'])->name('admin.categories.update');
+    Route::delete('/admin/categories/{id}', [AdminCategoryController::class, 'destroy'])->name('admin.categories.destroy');
+
+    // Bookings management
+    Route::get('/admin/bookings', [AdminBookingController::class, 'index'])->name('admin.bookings.index');
+    Route::get('/admin/bookings/{id}', [AdminBookingController::class, 'show'])->name('admin.bookings.show');
+    Route::patch('/admin/bookings/{id}/status', [AdminBookingController::class, 'updateStatus'])->name('admin.bookings.updateStatus');
+    Route::delete('/admin/bookings/{id}', [AdminBookingController::class, 'destroy'])->name('admin.bookings.destroy');
+});
 
 // Không khai báo fallback để Laravel trả về 404 cho đường dẫn không tồn tại

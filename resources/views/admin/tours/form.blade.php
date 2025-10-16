@@ -407,7 +407,7 @@
             <span>Quay lại</span>
         </a>
 
-        <form method="post"
+        <form id="tourForm" method="post"
             action="{{ $tour->exists ? route('admin.tours.update', $tour->tourID) : route('admin.tours.store') }}"
             enctype="multipart/form-data" class="needs-validation" novalidate>
             @csrf
@@ -445,7 +445,7 @@
                                 
                                 <div class="form-group">
                                     <label class="modern-label">Điểm đến</label>
-                                    <input type="text" name="destinationPoint"
+                                    <input type="text" name="departurePoint"
                                         value="{{ old('departurePoint', $tour->departurePoint) }}" class="modern-input">
                                 </div>
                             </div>
@@ -672,16 +672,24 @@
                 });
             });
 
-            // Initialize itinerary text
+            // Helper: strip leading "Ngày x:" prefix if present
+            function stripNgayPrefix(text) {
+                try {
+                    return (text || '').replace(/^\s*Ngày\s*\d+\s*:\s*/i, '').trim();
+                } catch (_) { return text; }
+            }
+
+            // Initialize itinerary text (do NOT auto-prepend "Ngày x:")
             if (existingItinerary.length > 0) {
-                const itineraryLines = existingItinerary.map(item =>
-                    `Ngày ${item.day}: ${item.activity}`
-                ).join('\n');
+                const itineraryLines = existingItinerary.map(item => {
+                    const raw = typeof item === 'object' ? (item.activity ?? '') : String(item ?? '');
+                    return stripNgayPrefix(raw);
+                }).join('\n');
                 if (itineraryText) itineraryText.value = itineraryLines;
             }
 
             // Form submission handler
-            const form = document.querySelector('form');
+            const form = document.getElementById('tourForm');
             form.addEventListener('submit', (e) => {
                 console.log('Form submitting...');
                 console.log('Images to delete:', imagesToDelete);
@@ -691,11 +699,12 @@
                 // Handle itinerary
                 const itineraryTextArea = document.getElementById('itineraryText');
                 if (itineraryTextArea && itineraryTextArea.value.trim()) {
-                    const lines = itineraryTextArea.value.trim().split('\n').filter(line => line.trim());
-                    const itinerary = lines.map((line, idx) => ({
-                        day: idx + 1,
-                        activity: line.trim()
-                    }));
+                const lines = itineraryTextArea.value.trim().split('\n').filter(line => line.trim());
+                const itinerary = lines.map((line, idx) => ({
+                    day: idx + 1,
+                    // ensure no accidental "Ngày x:" gets saved again
+                    activity: stripNgayPrefix(line.trim())
+                }));
                     itineraryInput.value = JSON.stringify(itinerary);
                     console.log('Set itinerary:', itineraryInput.value);
                 } else {

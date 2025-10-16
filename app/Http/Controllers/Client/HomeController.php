@@ -45,9 +45,8 @@ class HomeController extends Controller
         if (empty($slides)) {
             $slides = [['src' => $heroImage, 'url' => '#', 'title' => 'Hero']];
         }
-        // Lấy danh mục và số lượng tour trong mỗi danh mục
+        // Lấy danh mục và số lượng tour trong mỗi danh mục (hiển thị cả danh mục chưa có tour)
         $categories = Category::select('categoryID', 'categoryName', 'imageURL')
-            ->whereHas('tours')
             ->withCount('tours')
             ->orderBy('categoryName')
             ->take(8)

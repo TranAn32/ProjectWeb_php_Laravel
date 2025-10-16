@@ -64,7 +64,7 @@
                             </form>
                         </div>
                         <div class="menu-btns py-8">
-                            <a href="contact.html" class="theme-btn style-two bgc-secondary">
+                            <a href="{{ route('client.tours.index') }}" class="theme-btn style-two bgc-secondary">
                                 <span data-hover="Đặt ngay">Đặt ngay</span>
                                 <i class="fal fa-arrow-right"></i>
                             </a>

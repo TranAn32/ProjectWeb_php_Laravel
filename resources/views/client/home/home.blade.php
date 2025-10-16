@@ -266,7 +266,7 @@
                                                             </section> -->
     <!-- Hotel Area end -->
     <!-- About Us Area start -->
-    <section class="about-us-area py-50 rpb-90 rel z-1">
+    <section id="about" class="about-us-area py-50 rpb-90 rel z-1">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-xl-5 col-lg-6">

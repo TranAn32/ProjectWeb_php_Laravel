@@ -8,11 +8,16 @@ class Category extends Model
 {
     protected $table = 'categories';
     protected $primaryKey = 'categoryID';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'categoryName',
         'description',
+        'type',
+        'imageURL',
+        'slug',
+        'status',
+        'sort_order',
     ];
 
     // Accessor to keep using $category->name in views

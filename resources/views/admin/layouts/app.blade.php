@@ -302,6 +302,9 @@
                         <li><a class="@if (request()->routeIs('admin.tours.*')) active @endif"
                                 href="{{ route('admin.tours.index') }}"><i class="fa fa-route"></i>
                                 <span>Tours</span></a></li>
+                        <li><a class="@if (request()->routeIs('admin.categories.*')) active @endif"
+                                href="{{ route('admin.categories.index') }}"><i class="fa fa-folder"></i>
+                                <span>Danh mục</span></a></li>
                         <li><a class="@if (request()->routeIs('admin.bookings.*')) active @endif"
                                 href="{{ route('admin.bookings.index') }}"><i class="fa fa-ticket"></i>
                                 <span>Bookings</span></a></li>
