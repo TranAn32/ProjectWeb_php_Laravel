@@ -7,22 +7,27 @@
 @endsection
 
 @section('page_actions')
-    <a href="{{ route('admin.categories.create') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> Thêm danh mục</a>
+    {{-- Moved the "Thêm danh mục" button to the bottom footer --}}
 @endsection
 
 @section('content')
     <div class="card">
         <div class="card-body p-0">
+            <div class="d-flex justify-content-start p-3 border-bottom">
+                <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg"></i> Thêm danh mục
+                </a>
+            </div>
             <div class="table-responsive">
-                <table class="table table-striped mb-0">
+                <table class="table table-hover align-middle mb-0 category-table">
                     <thead>
                         <tr>
-                            <th style="width: 70px">ID</th>
-                            <th>Hình</th>
-                            <th>Tên danh mục</th>
-                            <th>Loại</th>
-                            <th>Trạng thái</th>
-                            <th style="width: 150px" class="text-end">Hành động</th>
+                            <th style="width: 90px">ID</th>
+                            <th style="min-width: 220px;">Hình</th>
+                            <th style="min-width: 240px;">Tên danh mục</th>
+                            <th style="width: 140px;">Loại</th>
+                            <th style="width: 140px;">Trạng thái</th>
+                            <th style="width: 170px" class="text-end">Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -31,12 +36,13 @@
                                 <td>{{ $category->categoryID }}</td>
                                 <td>
                                     @if ($category->imageURL)
-                                        <img src="/{{ $category->imageURL }}" alt="" style="width:50px;height:50px;object-fit:cover;border-radius:6px;">
+                                        <img src="/{{ $category->imageURL }}" alt="{{ $category->categoryName }}"
+                                            class="category-thumb">
                                     @else
                                         <span class="text-muted">—</span>
                                     @endif
                                 </td>
-                                <td>{{ $category->categoryName }}</td>
+                                <td class="fw-medium">{{ $category->categoryName }}</td>
                                 <td>
                                     <span class="badge bg-secondary">{{ $category->type }}</span>
                                 </td>
@@ -48,13 +54,16 @@
                                     @endif
                                 </td>
                                 <td class="text-end">
-                                    <a href="{{ route('admin.categories.edit', $category->categoryID) }}" class="btn btn-light btn-icon" title="Sửa">
+                                    <a href="{{ route('admin.categories.edit', $category->categoryID) }}"
+                                        class="btn btn-outline-primary btn-sm" title="Sửa">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <form action="{{ route('admin.categories.destroy', $category->categoryID) }}" method="POST" class="d-inline" onsubmit="return confirm('Xóa danh mục này?')">
+                                    <form action="{{ route('admin.categories.destroy', $category->categoryID) }}"
+                                        method="POST" class="d-inline" onsubmit="return confirm('Xóa danh mục này?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-light btn-icon text-danger" title="Xóa"><i class="bi bi-trash3"></i></button>
+                                        <button class="btn btn-outline-danger btn-sm" title="Xóa"><i
+                                                class="bi bi-trash3"></i></button>
                                     </form>
                                 </td>
                             </tr>
@@ -79,4 +88,27 @@
 @endsection
 
 
+@push('styles')
+    <style>
+        /* Larger rows and thumbnails for category list */
+        .category-table thead th {
+            font-weight: 600;
+        }
 
+        .category-table td,
+        .category-table th {
+            padding: 1rem 1rem;
+        }
+
+        .category-thumb {
+            width: 160px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+            cursor: default;
+        }
+
+        /* Removed hover overlay and hover effects per request */
+    </style>
+@endpush

@@ -8,7 +8,9 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\TourController as AdminTourController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Admin\SlideshowController;
 use App\Http\Controllers\Client\AuthController;
 use App\Http\Middleware\CheckAdmin;
 use Illuminate\Support\Facades\Auth;
@@ -74,6 +76,16 @@ Route::middleware([CheckAdmin::class])->group(function () {
     Route::get('/admin/bookings/{id}', [AdminBookingController::class, 'show'])->name('admin.bookings.show');
     Route::patch('/admin/bookings/{id}/status', [AdminBookingController::class, 'updateStatus'])->name('admin.bookings.updateStatus');
     Route::delete('/admin/bookings/{id}', [AdminBookingController::class, 'destroy'])->name('admin.bookings.destroy');
+
+    // Slideshow management (filesystem-only)
+    Route::get('/admin/slides', [SlideshowController::class, 'index'])->name('admin.slides.index');
+    // Users management
+    Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+    Route::patch('/admin/users/{id}/status', [AdminUserController::class, 'updateStatus'])->name('admin.users.updateStatus')
+        ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+    Route::post('/admin/slides', [SlideshowController::class, 'store'])->name('admin.slides.store');
+    Route::put('/admin/slides/{filename}', [SlideshowController::class, 'update'])->name('admin.slides.update');
+    Route::delete('/admin/slides/{filename}', [SlideshowController::class, 'destroy'])->name('admin.slides.destroy');
 });
 
 // Không khai báo fallback để Laravel trả về 404 cho đường dẫn không tồn tại

@@ -14,7 +14,13 @@
                 // Fallback phòng trường hợp controller không truyền
                 if (!isset($slides) || empty($slides)) {
                     $heroImage = $heroImage ?? asset('assets/images/hero/hero.jpg');
-                    $slides = [$heroImage];
+                    $slides = [
+                        [
+                            'src' => $heroImage,
+                            'url' => '#',
+                            'title' => 'Hero',
+                        ],
+                    ];
                 }
             @endphp
             <div class="hero-slideshow position-relative overflow-hidden appears" data-autoplay="3000" data-anim="fade-scale">
@@ -215,55 +221,55 @@
 
     <!-- Hotel Area start -->
     <!-- <section class="hotel-area bgc-lighter p-80 rel z-1">
-                                                                <div class="container-fluid bgc-lighter">
-                                                                    <div class="row justify-content-center ">
-                                                                        <div class="col-lg-12">
-                                                                            <div class="section-title text-black text-center counter-text-wrap mb-70" data-aos="fade-up" data-aos-duration="700">
-                                                                                <h2>Khám phá khách sạn hàng đầu</h2>
-                                                                                <p>Hơn <span class="count-text plus" data-speed="3000" data-stop="34500">0</span> trải nghiệm tuyệt vời chờ bạn</p>
+                                                                    <div class="container-fluid bgc-lighter">
+                                                                        <div class="row justify-content-center ">
+                                                                            <div class="col-lg-12">
+                                                                                <div class="section-title text-black text-center counter-text-wrap mb-70" data-aos="fade-up" data-aos-duration="700">
+                                                                                    <h2>Khám phá khách sạn hàng đầu</h2>
+                                                                                    <p>Hơn <span class="count-text plus" data-speed="3000" data-stop="34500">0</span> trải nghiệm tuyệt vời chờ bạn</p>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="row justify-content-center g-4">
-                                                                        @php $hotels = ($featuredHotels ?? []); @endphp
-                                                                        @forelse($hotels as $i => $h)
-                                                                        <div class="col-xxl-6 col-xl-8 col-lg-10">
-                                                                            <div class="destination-item style-four" data-aos="fade-up" data-aos-duration="700" data-aos-delay="{{ $i * 80 }}">
-                                                                                <div class="image">
-                                                                                    <img src="{{ $h['image'] ?: asset('assets/images/hotels/vinpearl-halong.jpg') }}" width="200" height="360" loading="lazy" style="width:100%;height:230px;object-fit:cover;">
-                                                                                </div>
-                                                                                <div class="content p-4">
-                                                                                    <h5 style="color: black;" class="mb-1">{{ $h['name'] }}</h5>
-                                                                                    <div class="d-flex align-items-center gap-2 small text-warning" aria-label="Đánh giá {{ $h['rating'] }} trên 5 sao">
-                                                                                        @for ($s = 1; $s <= 5; $s++)
+                                                                        <div class="row justify-content-center g-4">
+                                                                            @php $hotels = ($featuredHotels ?? []); @endphp
+                                                                            @forelse($hotels as $i => $h)
+                                                                            <div class="col-xxl-6 col-xl-8 col-lg-10">
+                                                                                <div class="destination-item style-four" data-aos="fade-up" data-aos-duration="700" data-aos-delay="{{ $i * 80 }}">
+                                                                                    <div class="image">
+                                                                                        <img src="{{ $h['image'] ?: asset('assets/images/hotels/vinpearl-halong.jpg') }}" width="200" height="360" loading="lazy" style="width:100%;height:230px;object-fit:cover;">
+                                                                                    </div>
+                                                                                    <div class="content p-4">
+                                                                                        <h5 style="color: black;" class="mb-1">{{ $h['name'] }}</h5>
+                                                                                        <div class="d-flex align-items-center gap-2 small text-warning" aria-label="Đánh giá {{ $h['rating'] }} trên 5 sao">
+                                                                                            @for ($s = 1; $s <= 5; $s++)
     @if ($s <= ($h['rating'] ?? 0))
     <i class="fas fa-star"></i>
 @else
     <i class="far fa-star"></i>
     @endif
     @endfor
-                                                                                            <span class="text-muted ms-2">{{ $h['rating'] }}/5</span>
-                                                                                    </div>
-                                                                                    <div class="text-muted small mt-1">
-                                                                                        <i class="fal fa-map-marker-alt me-1"></i>{{ $h['departurePoint'] ?? 'Địa điểm không xác định' }}
+                                                                                                <span class="text-muted ms-2">{{ $h['rating'] }}/5</span>
+                                                                                        </div>
+                                                                                        <div class="text-muted small mt-1">
+                                                                                            <i class="fal fa-map-marker-alt me-1"></i>{{ $h['departurePoint'] ?? 'Địa điểm không xác định' }}
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
             @empty
-                                                                        <div class="col-12 text-center">
-                                                                            <p class="text-muted mb-0">Chưa có dữ liệu khách sạn.</p>
+                                                                            <div class="col-12 text-center">
+                                                                                <p class="text-muted mb-0">Chưa có dữ liệu khách sạn.</p>
+                                                                            </div>
+                                                                            @endforelse
                                                                         </div>
-                                                                        @endforelse
+                                                                        <div  class="hotel-more-btn text-center mt-40">
+                                                                            <a style="background-color: #63AB45;" href="#" class="theme-btn style-four">
+                                                                                <span  data-hover="Xem thêm khách sạn">Xem thêm khách sạn</span>
+                                                                                <i class="fal fa-arrow-right"></i>
+                                                                            </a>
+                                                                        </div>
                                                                     </div>
-                                                                    <div  class="hotel-more-btn text-center mt-40">
-                                                                        <a style="background-color: #63AB45;" href="#" class="theme-btn style-four">
-                                                                            <span  data-hover="Xem thêm khách sạn">Xem thêm khách sạn</span>
-                                                                            <i class="fal fa-arrow-right"></i>
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                            </section> -->
+                                                                </section> -->
     <!-- Hotel Area end -->
     <!-- About Us Area start -->
     <section id="about" class="about-us-area py-50 rpb-90 rel z-1">
@@ -308,67 +314,67 @@
     <!-- About Us Area end -->
     <!-- Features Area start -->
     <!-- <section class="features-area pt-100 pb-45 rel z-1">
-                                                                <div class="container">
-                                                                    <div class="row align-items-center">
-                                                                        <div class="col-xl-6">
-                                                                            <div class="features-content-part mb-55" data-aos="fade-left" data-aos-duration="700">
-                                                                                <div class="section-title mb-60">
-                                                                                    <h2>Vì sao chọn TripGo?</h2>
-                                                                                    <p>Chất lượng dịch vụ tạo nên khác biệt.</p>
-                                                                                </div>
-                                                                                <div class="features-customer-box d-grid gap-3">
-                                                                                    <div class="p-3 bg-light rounded">1. Hành trình linh hoạt</div>
-                                                                                    <div class="p-3 bg-light rounded">2. Hỗ trợ chuyên nghiệp</div>
-                                                                                    <div class="p-3 bg-light rounded">3. Đánh giá minh bạch</div>
-                                                                                    <div class="p-3 bg-light rounded">4. Thanh toán an toàn</div>
+                                                                    <div class="container">
+                                                                        <div class="row align-items-center">
+                                                                            <div class="col-xl-6">
+                                                                                <div class="features-content-part mb-55" data-aos="fade-left" data-aos-duration="700">
+                                                                                    <div class="section-title mb-60">
+                                                                                        <h2>Vì sao chọn TripGo?</h2>
+                                                                                        <p>Chất lượng dịch vụ tạo nên khác biệt.</p>
+                                                                                    </div>
+                                                                                    <div class="features-customer-box d-grid gap-3">
+                                                                                        <div class="p-3 bg-light rounded">1. Hành trình linh hoạt</div>
+                                                                                        <div class="p-3 bg-light rounded">2. Hỗ trợ chuyên nghiệp</div>
+                                                                                        <div class="p-3 bg-light rounded">3. Đánh giá minh bạch</div>
+                                                                                        <div class="p-3 bg-light rounded">4. Thanh toán an toàn</div>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="col-xl-6" data-aos="fade-right" data-aos-duration="700">
-                                                                            <div class="row pb-25 g-3">
-                                                                                <div class="col-md-6">
-                                                                                    <div class="h-100 bgc-black text-white p-4 rounded">Ưu đãi độc quyền</div>
-                                                                                </div>
-                                                                                <div class="col-md-6">
-                                                                                    <div class="h-100 bgc-black text-white p-4 rounded">Hơn 500+ khách hàng</div>
+                                                                            <div class="col-xl-6" data-aos="fade-right" data-aos-duration="700">
+                                                                                <div class="row pb-25 g-3">
+                                                                                    <div class="col-md-6">
+                                                                                        <div class="h-100 bgc-black text-white p-4 rounded">Ưu đãi độc quyền</div>
+                                                                                    </div>
+                                                                                    <div class="col-md-6">
+                                                                                        <div class="h-100 bgc-black text-white p-4 rounded">Hơn 500+ khách hàng</div>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </section> -->
+                                                                </section> -->
     <!-- Features Area end -->
 
 
     <!-- Blog Area start -->
     <!-- <section class="blog-area py-70 rel z-1">
-                                                                <div class="container">
-                                                                    <div class="row justify-content-center">
-                                                                        <div class="col-lg-12">
-                                                                            <div class="section-title text-center counter-text-wrap mb-70" data-aos="fade-up" data-aos-duration="700">
-                                                                                <h2>Tin & Blog Du Lịch</h2>
-                                                                                <p>Cập nhật thông tin và mẹo du lịch mới nhất.</p>
+                                                                    <div class="container">
+                                                                        <div class="row justify-content-center">
+                                                                            <div class="col-lg-12">
+                                                                                <div class="section-title text-center counter-text-wrap mb-70" data-aos="fade-up" data-aos-duration="700">
+                                                                                    <h2>Tin & Blog Du Lịch</h2>
+                                                                                    <p>Cập nhật thông tin và mẹo du lịch mới nhất.</p>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="row justify-content-center g-4">
-                                                                        @for ($i = 0; $i < 3; $i++)
+                                                                        <div class="row justify-content-center g-4">
+                                                                            @for ($i = 0; $i < 3; $i++)
     <div class="col-xl-4 col-md-6">
-                                                                            <div class="blog-item" data-aos="fade-up" data-aos-duration="700">
-                                                                                <div class="image" style="height:200px;border-radius:10px;overflow:hidden;">
-                                                                                    <img src="{{ asset('assets/images/blog/blog' . (($i % 3) + 1) . '.jpg') }}" alt="Bài viết {{ $i + 1 }}" style="width:100%;height:100%;object-fit:cover;">
+                                                                                <div class="blog-item" data-aos="fade-up" data-aos-duration="700">
+                                                                                    <div class="image" style="height:200px;border-radius:10px;overflow:hidden;">
+                                                                                        <img src="{{ asset('assets/images/blog/blog' . (($i % 3) + 1) . '.jpg') }}" alt="Bài viết {{ $i + 1 }}" style="width:100%;height:100%;object-fit:cover;">
+                                                                                    </div>
+                                                                                    <div class="content p-3">
+                                                                                        <h5><a href="#">Bài viết {{ $i + 1 }}</a></h5>
+                                                                                        <p class="small mb-2">Mô tả ngắn gọn nội dung nổi bật của bài viết.</p>
+                                                                                        <a href="#" class="read-more">Đọc tiếp <i class="far fa-arrow-right"></i></a>
+                                                                                    </div>
                                                                                 </div>
-                                                                                <div class="content p-3">
-                                                                                    <h5><a href="#">Bài viết {{ $i + 1 }}</a></h5>
-                                                                                    <p class="small mb-2">Mô tả ngắn gọn nội dung nổi bật của bài viết.</p>
-                                                                                    <a href="#" class="read-more">Đọc tiếp <i class="far fa-arrow-right"></i></a>
-                                                                                </div>
-                                                                            </div>
-                                                                    </div>
+                                                                        </div>
     @endfor
-                                                                </div>
-                                                                </div>
-                                                            </section> -->
+                                                                    </div>
+                                                                    </div>
+                                                                </section> -->
     <!-- Blog Area end -->
 
     @push('styles')

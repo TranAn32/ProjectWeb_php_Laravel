@@ -3,132 +3,132 @@
 <div id="toast-container" class="toast-container"></div>
 
 <style>
-        /* Toast Notification Styles */
+    /* Toast Notification Styles */
+    .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-width: 400px;
+    }
+
+    .toast-notification {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        padding: 16px 20px;
+        border-left: 4px solid;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        transform: translateX(450px);
+        transition: all 0.3s ease;
+        opacity: 0;
+        min-width: 300px;
+    }
+
+    .toast-notification.show {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    .toast-notification.hide {
+        transform: translateX(450px);
+        opacity: 0;
+    }
+
+    .toast-success {
+        border-left-color: #22c55e;
+    }
+
+    .toast-error {
+        border-left-color: #ef4444;
+    }
+
+    .toast-icon {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: white;
+        margin-top: 2px;
+    }
+
+    .toast-success .toast-icon {
+        background: #22c55e;
+    }
+
+    .toast-error .toast-icon {
+        background: #ef4444;
+    }
+
+    .toast-content {
+        flex: 1;
+    }
+
+    .toast-title {
+        font-weight: 600;
+        font-size: 14px;
+        color: #1f2937;
+        margin-bottom: 4px;
+    }
+
+    .toast-message {
+        font-size: 13px;
+        color: #6b7280;
+        line-height: 1.4;
+    }
+
+    .toast-message ul {
+        margin: 0;
+        padding-left: 16px;
+    }
+
+    .toast-message li {
+        margin-bottom: 2px;
+    }
+
+    .toast-close {
+        flex-shrink: 0;
+        background: none;
+        border: none;
+        color: #9ca3af;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 0;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s ease;
+    }
+
+    .toast-close:hover {
+        color: #6b7280;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
         .toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-width: 400px;
+            top: 10px;
+            right: 10px;
+            left: 10px;
+            max-width: none;
         }
 
         .toast-notification {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            padding: 16px 20px;
-            border-left: 4px solid;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            transform: translateX(450px);
-            transition: all 0.3s ease;
-            opacity: 0;
-            min-width: 300px;
+            min-width: auto;
         }
-
-        .toast-notification.show {
-            transform: translateX(0);
-            opacity: 1;
-        }
-
-        .toast-notification.hide {
-            transform: translateX(450px);
-            opacity: 0;
-        }
-
-        .toast-success {
-            border-left-color: #22c55e;
-        }
-
-        .toast-error {
-            border-left-color: #ef4444;
-        }
-
-        .toast-icon {
-            flex-shrink: 0;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: white;
-            margin-top: 2px;
-        }
-
-        .toast-success .toast-icon {
-            background: #22c55e;
-        }
-
-        .toast-error .toast-icon {
-            background: #ef4444;
-        }
-
-        .toast-content {
-            flex: 1;
-        }
-
-        .toast-title {
-            font-weight: 600;
-            font-size: 14px;
-            color: #1f2937;
-            margin-bottom: 4px;
-        }
-
-        .toast-message {
-            font-size: 13px;
-            color: #6b7280;
-            line-height: 1.4;
-        }
-
-        .toast-message ul {
-            margin: 0;
-            padding-left: 16px;
-        }
-
-        .toast-message li {
-            margin-bottom: 2px;
-        }
-
-        .toast-close {
-            flex-shrink: 0;
-            background: none;
-            border: none;
-            color: #9ca3af;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 0;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: color 0.2s ease;
-        }
-
-        .toast-close:hover {
-            color: #6b7280;
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .toast-container {
-                top: 10px;
-                right: 10px;
-                left: 10px;
-                max-width: none;
-            }
-
-            .toast-notification {
-                min-width: auto;
-            }
-        }
-    </style>
+    }
+</style>
 
 @push('scripts')
     <script>
@@ -203,8 +203,9 @@
             @endif
 
             @if (session('error'))
+                const __errorDuration = {{ (int) session('error_duration', 2000) }};
                 setTimeout(() => {
-                    showToast('error', 'Lỗi!', '{{ session('error') }}');
+                    showToast('error', 'Lỗi!', '{{ session('error') }}', __errorDuration);
                 }, 500);
             @endif
 

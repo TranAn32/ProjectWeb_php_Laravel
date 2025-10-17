@@ -15,30 +15,27 @@ class HomeController extends Controller
         $heroImage = asset('assets/images/hero/hero.jpg');
         $slides = [];
         $dir = public_path('assets/images/slideShow');
-        // Đọc metadata (nếu có) từ slides.json: [{"file":"slideShow (1).jpg","url":"/tour/abc","title":"Tiêu đề"}, ...]
-        $metaMap = [];
-        $metaFile = $dir . '/slides.json';
-        if (is_file($metaFile)) {
-            $raw = @file_get_contents($metaFile);
-            $data = json_decode($raw, true);
-            if (is_array($data)) {
-                foreach ($data as $entry) {
-                    if (!empty($entry['file'])) {
-                        $metaMap[$entry['file']] = $entry;
-                    }
+        // Đọc trực tiếp ảnh trong thư mục, không dùng metadata
+        if (is_dir($dir)) {
+            $entries = @scandir($dir) ?: [];
+            $files = [];
+            foreach ($entries as $e) {
+                if ($e === '.' || $e === '..') continue;
+                $path = $dir . DIRECTORY_SEPARATOR . $e;
+                if (is_file($path) && preg_match('/\.(jpe?g|png|gif|webp|avif)$/i', $e)) {
+                    $files[] = $e;
                 }
             }
-        }
-        if (is_dir($dir)) {
-            $files = glob($dir . '/*.{jpg,jpeg,png,gif,webp,avif}', GLOB_BRACE) ?: [];
-            usort($files, fn($a, $b) => strnatcasecmp($a, $b));
-            foreach ($files as $f) {
-                $base = basename($f);
-                $meta = $metaMap[$base] ?? [];
+            natsort($files);
+            foreach ($files as $base) {
+                $fullPath = $dir . DIRECTORY_SEPARATOR . $base;
+                $mtime = @filemtime($fullPath) ?: time();
+                // Cache-busting query to ensure latest image shows immediately
+                $src = asset('assets/images/slideShow/' . $base) . '?v=' . $mtime;
                 $slides[] = [
-                    'src' => asset('assets/images/slideShow/' . $base),
-                    'url' => $meta['url'] ?? '#',
-                    'title' => $meta['title'] ?? pathinfo($base, PATHINFO_FILENAME),
+                    'src' => $src,
+                    'url' => '#',
+                    'title' => pathinfo($base, PATHINFO_FILENAME),
                 ];
             }
         }

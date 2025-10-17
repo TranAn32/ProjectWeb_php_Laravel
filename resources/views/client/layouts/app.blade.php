@@ -56,13 +56,13 @@
                             </nav>
                         </div>
                         <!-- Nav Search -->
-                        <div class="nav-search">
+                        {{-- <div class="nav-search">
                             <button class="far fa-search"></button>
                             <form action="#" class="hide">
                                 <input type="text" placeholder="Tìm kiếm" class="searchbox" required="">
                                 <button type="submit" class="searchbutton far fa-search"></button>
                             </form>
-                        </div>
+                        </div> --}}
                         <div class="menu-btns py-8">
                             <a href="{{ route('client.tours.index') }}" class="theme-btn style-two bgc-secondary">
                                 <span data-hover="Đặt ngay">Đặt ngay</span>
@@ -131,6 +131,8 @@
 
             @yield('content')
         </main>
+
+        {{-- Session error toasts are auto-handled by components.toast-notification; no alert fallback here. --}}
 
         <!-- Footer embedded -->
         <footer class="main-footer bgs-cover overlay rel z-1 pb-25"

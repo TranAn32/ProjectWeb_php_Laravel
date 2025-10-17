@@ -28,15 +28,20 @@ class AuthController extends Controller
             'remember' => 'nullable|boolean',
         ]);
 
-        $field = filter_var($data['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        // Use DB column names: 'email' or 'userName' (username is a virtual attribute)
+        $field = filter_var($data['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'userName';
 
         $user = User::query()->where($field, $data['login'])->first();
 
-        // Kiểm tra trạng thái Active nếu có cột status
+        // Kiểm tra trạng thái nếu có cột status
         if ($user && Schema::hasColumn('users', 'status')) {
             $status = (string)($user->status ?? '');
             if (strcasecmp($status, 'active') !== 0) {
-                return back()->withErrors(['login' => 'Tài khoản chưa được kích hoạt'])->onlyInput('login');
+                // Flash lỗi để hiện popup (toast) theo layout client
+                return back()
+                    ->with('error', 'Tài khoản đã bị ban do vi phạm chính sách')
+                    ->with('error_duration', 5000)
+                    ->onlyInput('login');
             }
         }
 
@@ -52,7 +57,8 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $data = $request->validate([
-            'username' => 'required|string|min:3|max:50|unique:users,username',
+            // DB column is userName
+            'username' => 'required|string|min:3|max:50|unique:users,userName',
             'email' => 'required|email|max:100|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
             'phone_number' => 'nullable|string|max:20',

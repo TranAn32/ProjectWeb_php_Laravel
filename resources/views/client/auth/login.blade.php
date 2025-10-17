@@ -334,6 +334,8 @@
 </head>
 
 <body>
+    {{-- Toast component for popup notifications --}}
+    @include('components.toast-notification')
     <div class="auth-shell">
         <div class="auth-left">
             <div class="brand-inline mb-4" data-aos="fade-right" data-aos-duration="800">
@@ -393,7 +395,11 @@
             once: true,
             duration: 700
         });
+
+        // Popup toasts are auto-handled by the included toast-notification component via session('error').
     </script>
+    {{-- Render pushed scripts from included components (e.g., toast) --}}
+    @stack('scripts')
 </body>
 
 </html>
