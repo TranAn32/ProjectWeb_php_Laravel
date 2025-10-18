@@ -177,6 +177,8 @@
                                     <label class="form-label">Trẻ em</label>
                                     <input type="number" name="num_children" class="form-control" min="0"
                                         value="{{ old('num_children', 0) }}" />
+                                    <div class="invalid-feedback" id="peopleCountError">Tổng số người không được vượt quá
+                                        50.</div>
                                     @error('num_children')
                                         <div class="text-danger small">{{ $message }}</div>
                                     @enderror
@@ -298,6 +300,7 @@
             const pricing = document.getElementById('pricingData');
             const adultPrice = Number(pricing?.dataset.adult || '0');
             const childPrice = Number(pricing?.dataset.child || '0');
+            const peopleError = document.getElementById('peopleCountError');
 
             // Validation elements
             const departureDateInput = document.getElementById('departureDate');
@@ -408,20 +411,65 @@
                 updateSubmitButton();
             });
 
-            // Event listeners for price calculation
-            adultInput.addEventListener('input', calc);
-            adultInput.addEventListener('change', calc);
-            childInput.addEventListener('input', calc);
-            childInput.addEventListener('change', calc);
+            // People limit helpers
+            function totalPeople() {
+                const a = Math.max(0, parseInt(adultInput.value || '1', 10));
+                const c = Math.max(0, parseInt(childInput.value || '0', 10));
+                return a + c;
+            }
+
+            function checkPeopleCount() {
+                const over = totalPeople() > 50;
+                if (over) {
+                    adultInput.classList.add('is-invalid');
+                    childInput.classList.add('is-invalid');
+                    if (peopleError) peopleError.style.display = 'block';
+                } else {
+                    adultInput.classList.remove('is-invalid');
+                    childInput.classList.remove('is-invalid');
+                    if (peopleError) peopleError.style.display = 'none';
+                }
+                // Do not disable submit here; only visual feedback
+                return !over;
+            }
+
+            function onQtyChange() {
+                calc();
+                checkPeopleCount();
+            }
+
+            // Event listeners for price calculation + visual validation
+            adultInput.addEventListener('input', onQtyChange);
+            adultInput.addEventListener('change', onQtyChange);
+            childInput.addEventListener('input', onQtyChange);
+            childInput.addEventListener('change', onQtyChange);
+
+            // Initial check for people count on load
+            checkPeopleCount();
 
             // Prevent form submit if invalid
             form.addEventListener('submit', function(e) {
                 dateValid = validateDepartureDate();
                 phoneValid = validatePhoneNumber();
                 updateSubmitButton();
+                // If total people over 50, block and show toast now
+                if (totalPeople() > 50) {
+                    e.preventDefault();
+                    checkPeopleCount();
+                    if (window.showErrorToast) {
+                        window.showErrorToast('Lỗi', 'Số lượng quá nhiều. Không thể đặt quá 50 người.', 4000);
+                    } else {
+                        alert('Số lượng quá nhiều. Không thể đặt quá 50 người.');
+                    }
+                    return;
+                }
                 if (!dateValid || !phoneValid) {
                     e.preventDefault();
-                    alert('Vui lòng sửa các lỗi trước khi gửi form.');
+                    if (window.showErrorToast) {
+                        window.showErrorToast('Lỗi', 'Vui lòng sửa các lỗi trước khi gửi form.', 3000);
+                    } else {
+                        alert('Vui lòng sửa các lỗi trước khi gửi form.');
+                    }
                 }
             });
         })();
